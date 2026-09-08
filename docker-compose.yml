@@ -1,0 +1,72 @@
+version: '3.9'
+
+# ============================================================
+# NEVI — Plataforma Educativa con IA
+# Stack: PostgreSQL 16 + Spring Boot 3.3.4 + React/Vite/Nginx
+# ============================================================
+
+services:
+
+  # ── Base de datos ───────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: nevi-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${DB_NAME:-nevi}
+      POSTGRES_USER:     ${DB_USER:-nevi}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-nevi}
+    volumes:
+      - nevi_db_data:/var/lib/postgresql/data   # Datos persistentes entre reinicios.
+    ports:
+      - "5432:5432"   # Útil para conectarte con DBeaver o pgAdmin en desarrollo.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-nevi} -d ${DB_NAME:-nevi}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend Spring Boot ─────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nevi-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy   # Solo arranca cuando PostgreSQL está listo.
+    environment:
+      DB_HOST:       db
+      DB_PORT:       5432
+      DB_NAME:       ${DB_NAME:-nevi}
+      DB_USER:       ${DB_USER:-nevi}
+      DB_PASSWORD:   ${DB_PASSWORD:-nevi}
+      JWT_SECRET:    ${JWT_SECRET:-nevi-super-secret-key-change-in-production-2024}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Frontend React + Nginx ──────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+        VITE_WS_URL:  ${VITE_WS_URL:-http://localhost:8080/ws}
+        VITE_GROQ_API_KEY: ${VITE_GROQ_API_KEY}
+    container_name: nevi-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  nevi_db_data:
+    name: nevi_db_data

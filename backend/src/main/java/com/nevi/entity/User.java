@@ -1,0 +1,35 @@
+package com.nevi.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+// Tabla "users" — almacena todos los usuarios del sistema (profesores y estudiantes).
+@Entity
+@Table(name = "users")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;              // Almacena el hash bcrypt, nunca la contraseña en texto plano.
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String role;                  // "teacher" o "student"
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+}

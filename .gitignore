@@ -1,0 +1,29 @@
+# Variables de entorno — NUNCA subir al repositorio
+.env
+.env.local
+.env.*.local
+
+# Dependencias de Node
+frontend/node_modules/
+node_modules/
+
+# Build de producción
+frontend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# Java / Maven
+backend/target/
+*.class
+*.jar
