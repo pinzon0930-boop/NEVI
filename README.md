@@ -1,7 +1,7 @@
 <div align="center">
 🎓 NEVI
-Plataforma Educativa con Inteligencia Artificial
-Plataforma educativa para la gestión de grupos, actividades académicas, comunicación y herramientas de inteligencia artificial
+Network Of Virtual Interaction
+Plataforma educativa de comunicación y aprendizaje asistida por IA
 
 
 
@@ -11,114 +11,47 @@ Plataforma educativa para la gestión de grupos, actividades académicas, comuni
 
 </div>
 ¿Qué es NEVI?
-NEVI es una plataforma educativa orientada a facilitar la interacción entre profesores y estudiantes dentro de espacios académicos.
+NEVI es una SPA (Single Page Application) que conecta profesores y estudiantes en un entorno educativo. Los profesores pueden crear y administrar grupos, generar actividades con ayuda de IA y utilizar diferentes herramientas para apoyar el proceso académico. Los estudiantes pueden unirse a grupos mediante un código, consultar actividades, participar en el espacio de comunicación y acceder a herramientas de apoyo académico impulsadas por inteligencia artificial.
 
-La plataforma permite crear y administrar grupos, gestionar actividades, intercambiar mensajes y utilizar diferentes herramientas de inteligencia artificial como apoyo al proceso educativo.
-
-Los profesores pueden crear grupos, generar actividades, quizzes y rúbricas, además de obtener retroalimentación y análisis relacionados con el trabajo de los estudiantes.
-
-Los estudiantes pueden unirse a grupos mediante códigos de invitación, consultar actividades, participar en los espacios de comunicación y utilizar herramientas de inteligencia artificial para apoyar su aprendizaje.
-
-Actualmente, el sistema utiliza una arquitectura compuesta por un frontend desarrollado con React y Vite y un backend desarrollado en Java, con persistencia de datos de forma local. Para las funcionalidades de inteligencia artificial se utiliza la API de Groq.
+La aplicación cuenta con un frontend desarrollado en React y Vite, un backend desarrollado en Java y una base de datos ejecutada de forma local.
 
 Funcionalidades
 Para profesores
-Gestión de grupos — Creación y administración de grupos académicos.
-Código de invitación — Generación de códigos para permitir que los estudiantes se incorporen a un grupo.
-Gestión de actividades — Creación y administración de actividades académicas.
-Generador de actividades con IA — Apoyo mediante inteligencia artificial para crear contenido educativo.
-Generador de quizzes — Creación de preguntas de opción múltiple sobre diferentes temas.
-Generación de rúbricas — Creación de criterios de evaluación con diferentes niveles de desempeño.
-Retroalimentación con IA — Análisis de respuestas y generación de retroalimentación.
-Resumen del grupo — Generación de información y análisis sobre las actividades del grupo.
-Comunicación grupal — Interacción mediante mensajes dentro de los grupos.
+Gestión de grupos — Crea grupos de clase con código de invitación único
+Chat grupal — Comunicación con los miembros del grupo
+Creación de actividades — Genera títulos y descripciones de actividades con IA
+Generador de quiz — Crea preguntas de opción múltiple sobre cualquier tema
+Rúbricas automáticas — Genera rúbricas de evaluación con niveles detallados
+Retroalimentación con IA — Analiza respuestas de estudiantes y genera feedback constructivo
+Resumen del grupo — Panorama del estado del grupo con recomendaciones pedagógicas
 Para estudiantes
-Registro e inicio de sesión — Acceso individual a la plataforma.
-Unirse a grupos — Incorporación a grupos mediante código de invitación.
-Consulta de actividades — Visualización de las actividades asignadas.
-Participación en grupos — Interacción y comunicación con los integrantes del grupo.
-Tutor IA — Asistente de inteligencia artificial para resolver dudas académicas.
-Explicaciones simplificadas — Conversión de descripciones de actividades a explicaciones más sencillas.
-Apoyo académico mediante IA — Utilización de las herramientas de inteligencia artificial disponibles en la plataforma.
-Arquitectura del sistema
-NEVI está organizado en diferentes capas que separan la interfaz de usuario, la lógica de aplicación, los servicios y la persistencia de datos.
-
-                         ┌─────────────────────┐
-                         │       USUARIO       │
-                         │  Profesor / Alumno  │
-                         └──────────┬──────────┘
-                                    │
-                                    ▼
-                         ┌─────────────────────┐
-                         │      FRONTEND       │
-                         │    React + Vite     │
-                         └──────────┬──────────┘
-                                    │
-                              Servicios
-                                    │
-                                    ▼
-                         ┌─────────────────────┐
-                         │       BACKEND       │
-                         │     Java / Maven    │
-                         └──────────┬──────────┘
-                                    │
-                         ┌──────────┴──────────┐
-                         │                     │
-                         ▼                     ▼
-                ┌─────────────────┐   ┌─────────────────┐
-                │ Base de datos   │   │    Groq API     │
-                │     Local       │   │ Inteligencia IA │
-                └─────────────────┘   └─────────────────┘
-
-Frontend
-El frontend es una aplicación web desarrollada con React y Vite.
-
-Se encarga de:
-
-Presentar la interfaz de usuario.
-Gestionar las páginas y navegación.
-Manejar los componentes de la aplicación.
-Gestionar el estado necesario de la aplicación.
-Comunicarse con los servicios internos y el backend.
-Presentar las funcionalidades de inteligencia artificial.
-Backend
-El backend está desarrollado en Java y utiliza Maven para la gestión del proyecto y sus dependencias.
-
-Su función es centralizar la lógica de negocio y las operaciones relacionadas con los datos de la aplicación.
-
-El backend se encuentra dentro de la carpeta:
-
-backend/
-
-y cuenta con configuración para su ejecución mediante Docker.
-
-Persistencia
-A diferencia de la versión anterior del proyecto, donde la información se almacenaba mediante servicios de base de datos en la nube, la versión actual utiliza una base de datos local.
-
-Esto permite ejecutar el sistema y sus datos dentro del entorno local de desarrollo.
-
-Inteligencia artificial
-NEVI utiliza Groq API como servicio externo para las funcionalidades relacionadas con inteligencia artificial.
-
-La comunicación con Groq se realiza desde los servicios correspondientes de la aplicación.
-
+Unirse por código — Acceso a grupos mediante un código de invitación
+Chat grupal — Participación en la conversación del grupo
+Tutor NEVI — Asistente académico disponible para resolver dudas
+Explicaciones simplificadas — Las actividades se explican en lenguaje simple
+Consulta de actividades — Visualización de las actividades disponibles dentro de los grupos
 Stack tecnológico
 Capa	Tecnología
-Frontend	React 18
-Build Tool	Vite
+Frontend	React 18 + Vite
 Estilos	CSS
 Backend	Java
-Gestión de dependencias	Maven
-Base de datos	Base de datos local
-Inteligencia artificial	Groq API
-Contenedores	Docker
-Orquestación	Docker Compose
+Gestión del backend	Maven
+Base de datos	Local
+IA	Groq API
+Contenedores	Docker + Docker Compose
+
+Capturas de pantalla
+Login	Crear cuenta
+<img width="1211" height="556" alt="{A5B385FF-27D2-4C4B-8E53-06AE5AF1D7A8}" src="https://github.com/user-attachments/assets/4a956e17-4a37-4fa2-80e4-df08c1343b59" />	<img width="399" height="571" alt="{172E1BFF-0A40-4268-8616-21208DA32EFA}" src="https://github.com/user-attachments/assets/51605225-d775-47ac-b345-6dbef15f321c" />
+
+Chat grupal	Tutor NEVI
+<img width="838" height="590" alt="{B3C05C4E-1677-4964-9AE4-3553B433AF8C}" src="https://github.com/user-attachments/assets/ab79fb7e-4802-4585-b421-de44d8db638c" />	<img width="1113" height="602" alt="{37EF751D-2641-4189-863F-122D04065169}" src="https://github.com/user-attachments/assets/6b400175-99f2-48be-a7ff-178cf566881c" />
+
+Generador de quiz	Rúbrica automática
+<img width="1920" height="939" alt="image" src="https://github.com/user-attachments/assets/d53bd5e8-fe64-4811-8507-142656b321cc" />	<img width="1920" height="943" alt="image" src="https://github.com/user-attachments/assets/f3eb2557-2076-42be-a813-55ec561473c4" />
 
 Estructura del proyecto
-La estructura actual del proyecto se encuentra organizada de la siguiente manera:
-
 NEVI/
-│
 ├── backend/
 │   ├── src/
 │   │   └── main/
@@ -128,10 +61,8 @@ NEVI/
 │   │       └── resources/
 │   ├── Dockerfile
 │   └── pom.xml
-│
 ├── dossier/
 │   └── 01-contexto-sistema.md
-│
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -142,16 +73,13 @@ NEVI/
 │   │   │   ├── ModalQuiz.jsx
 │   │   │   ├── ModalRetroalimentacion.jsx
 │   │   │   └── ModalRubrica.jsx
-│   │   │
 │   │   ├── context/
-│   │   │
 │   │   ├── pages/
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── GrupoDetalle.jsx
-│   │   │   ├── Grupos.jsx
 │   │   │   ├── Login.jsx
-│   │   │   └── Register.jsx
-│   │   │
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Grupos.jsx
+│   │   │   └── GrupoDetalle.jsx
 │   │   ├── services/
 │   │   │   ├── actividades.js
 │   │   │   ├── api.js
@@ -159,245 +87,112 @@ NEVI/
 │   │   │   ├── groq.js
 │   │   │   ├── grupos.js
 │   │   │   └── mensajes.js
-│   │   │
 │   │   ├── App.jsx
 │   │   ├── index.css
 │   │   └── main.jsx
-│   │
 │   └── index.html
-│
 ├── .env.example
 ├── .gitignore
 ├── docker-compose.yml
 └── README.md
 
-Descripción de las principales carpetas
-frontend/src/components/
-Contiene los componentes reutilizables de la interfaz y las herramientas académicas de NEVI.
-
-Entre ellos se encuentran:
-
-AsistenteIA.jsx — Asistente académico basado en IA.
-CrearActividad.jsx — Creación de actividades.
-CrearGrupo.jsx — Creación de grupos.
-ModalQuiz.jsx — Generación de quizzes.
-ModalRubrica.jsx — Generación de rúbricas.
-ModalRetroalimentacion.jsx — Generación de retroalimentación.
-ModalExplicacion.jsx — Generación de explicaciones simplificadas.
-frontend/src/pages/
-Contiene las páginas principales de la aplicación:
-
-Login.jsx — Inicio de sesión.
-Register.jsx — Registro de usuarios.
-Dashboard.jsx — Panel principal.
-Grupos.jsx — Gestión y visualización de grupos.
-GrupoDetalle.jsx — Detalle y funcionalidades de un grupo.
-frontend/src/services/
-Contiene los servicios encargados de manejar las operaciones de la aplicación:
-
-api.js — Comunicación con el backend.
-auth.js — Operaciones relacionadas con autenticación.
-grupos.js — Operaciones relacionadas con grupos.
-actividades.js — Operaciones relacionadas con actividades.
-mensajes.js — Operaciones relacionadas con mensajes.
-groq.js — Funciones relacionadas con inteligencia artificial.
-frontend/src/context/
-Contiene los contextos utilizados para compartir información y estado entre diferentes componentes de la aplicación.
-
-backend/
-Contiene la implementación del servidor de NEVI.
-
-El proyecto backend utiliza:
-
-Java.
-Maven.
-Docker.
-dossier/
-Contiene documentación relacionada con el análisis, contexto y arquitectura del sistema.
-
 Instalación local
 Prerrequisitos
-Antes de ejecutar NEVI se recomienda tener instalado:
-
-Node.js 18 o superior
-npm 9 o superior
+Node.js 18+
+npm 9+
 Java JDK
 Maven
-Docker
-Docker Compose
+Docker y Docker Compose
 Una clave de API de Groq
 1. Clonar el repositorio
 git clone https://github.com/pinzon0930-boop/NEVI.git
 cd NEVI
 
-2. Configurar las variables de entorno
-El proyecto incluye un archivo de referencia:
-
-.env.example
-
-Crea el archivo de variables de entorno correspondiente y configura las variables necesarias para la ejecución del sistema.
-
-La configuración debe incluir la información necesaria para la conexión con la base de datos local y el servicio de inteligencia artificial.
-
-Importante: Nunca compartas ni subas claves privadas al repositorio. Los archivos de entorno deben permanecer fuera del control de versiones.
-
-3. Instalar dependencias del frontend
-Ingresa a la carpeta del frontend:
-
+2. Instalar dependencias del frontend
 cd frontend
-
-Instala las dependencias:
-
 npm install
 
-4. Ejecutar el frontend
-Desde la carpeta frontend:
+3. Configurar variables de entorno
+Utiliza el archivo .env.example ubicado en la raíz del proyecto como referencia para configurar las variables necesarias.
 
+La configuración incluye los valores necesarios para la conexión con la base de datos local y el acceso a la API de Groq.
+
+Importante: Nunca compartas ni subas tus claves al repositorio. Los archivos .env deben mantenerse fuera del control de versiones.
+
+4. Ejecutar el backend
+Desde la carpeta backend/:
+
+cd ../backend
+mvn spring-boot:run
+
+5. Levantar el frontend
+Desde la carpeta frontend/:
+
+cd ../frontend
 npm run dev
 
-La aplicación estará disponible normalmente en:
+La aplicación estará disponible en:
 
 http://localhost:5173
 
-5. Ejecutar el backend
-El backend se encuentra en:
-
-backend/
-
-Al utilizar Maven, puede ejecutarse mediante las herramientas configuradas en el proyecto.
-
-Desde la carpeta backend:
-
-cd backend
-mvn spring-boot:run
-
-La forma exacta de ejecución puede variar según la configuración actual del proyecto y la clase principal definida en el backend.
-
-6. Ejecutar mediante Docker Compose
-NEVI también incluye:
-
-docker-compose.yml
-
-Este archivo permite centralizar la ejecución de los servicios configurados para el proyecto.
-
-Para iniciar los servicios:
+6. Ejecutar con Docker
+El proyecto incluye un archivo docker-compose.yml para facilitar la ejecución de los servicios.
 
 docker compose up --build
 
-Para detenerlos:
+Para detener los servicios:
 
 docker compose down
 
 Variables de entorno
-Las variables de entorno utilizadas por el proyecto se encuentran documentadas en:
+Variable	Descripción
+Variables de conexión a la base de datos	Configuración de la base de datos local
+Variable de API de Groq	Clave utilizada para acceder a los servicios de inteligencia artificial
+
+Las variables disponibles y sus nombres exactos se encuentran en:
 
 .env.example
 
-Entre las configuraciones principales se encuentra la información necesaria para:
-
-Configuración	Propósito
-Base de datos	Conexión con la persistencia local
-Groq API	Acceso a los servicios de inteligencia artificial
-Backend	Configuración de comunicación entre frontend y backend
-
-Las variables concretas deben mantenerse sincronizadas con .env.example y con la configuración utilizada actualmente por el backend y frontend.
-
-Integración con IA
-NEVI utiliza Groq API para proporcionar diferentes funcionalidades de inteligencia artificial.
-
-Las funcionalidades disponibles incluyen:
-
-Funcionalidad	Propósito
-Tutor IA	Responder preguntas académicas de los estudiantes
-Generación de actividades	Crear contenido para actividades educativas
-Generación de quizzes	Crear preguntas de opción múltiple
-Generación de rúbricas	Crear criterios de evaluación
-Retroalimentación	Analizar respuestas y proporcionar feedback
-Explicaciones	Simplificar la explicación de actividades
-Resumen de grupo	Analizar información relacionada con el grupo
+Integración con IA (Groq)
+NEVI utiliza la API de Groq para proporcionar diferentes funcionalidades de inteligencia artificial a profesores y estudiantes.
 
 La integración se encuentra principalmente en:
 
 frontend/src/services/groq.js
 
+Función	Propósito
+preguntarIA(pregunta)	Tutor académico para estudiantes
+generarActividad(tema)	Crea actividades educativas
+generarQuiz(tema, cantidad)	Genera preguntas de opción múltiple
+generarRubrica(titulo, descripcion)	Genera rúbricas de evaluación
+generarRetroalimentacion(titulo, respuesta)	Genera feedback constructivo
+resumirActividad(titulo, descripcion)	Explica actividades en lenguaje simple
+generarResumenGrupo(actividades)	Analiza el estado del grupo
+
 Modelo de datos
-La versión actual del proyecto utiliza persistencia local.
+La versión actual de NEVI utiliza una base de datos local.
 
-La estructura concreta de la base de datos se encuentra asociada a la implementación del backend y debe mantenerse alineada con los modelos y servicios definidos dentro de:
+La gestión y acceso a los datos se realiza mediante el backend Java.
 
-backend/src/main/
+A nivel conceptual, el sistema maneja información relacionada con:
 
-A nivel conceptual, NEVI maneja información relacionada con:
-
-Usuarios
+usuarios
    │
-   ├── Perfiles
+   ├── perfiles
    │
-   └── Roles
-          │
-          ▼
-        Grupos
-          │
-          ├── Integrantes
-          │
-          ├── Mensajes
-          │
-          └── Actividades
-                   │
-                   ├── Quizzes
-                   ├── Rúbricas
-                   └── Retroalimentación
+   └── roles
+        │
+        ▼
+      grupos
+        │
+        ├── integrantes
+        ├── mensajes
+        └── actividades
+                    │
+                    ├── quizzes
+                    ├── rúbricas
+                    └── retroalimentación
 
-Comunicación entre componentes
-La comunicación general del sistema sigue el siguiente flujo:
-
-Usuario
-   │
-   ▼
-React / Vite
-   │
-   ▼
-Services
-   │
-   ▼
-API
-   │
-   ▼
-Backend Java
-   │
-   ├──────────────► Base de datos local
-   │
-   └──────────────► Groq API
-
-El frontend se encarga principalmente de la presentación y de la interacción con el usuario, mientras que el backend centraliza las operaciones correspondientes a la lógica de la aplicación y el acceso a los datos.
-
-Documentación
-La documentación arquitectónica del proyecto se encuentra en:
-
-dossier/
-
-Actualmente contiene documentación relacionada con el contexto general del sistema.
-
-La documentación seguirá la metodología C4, permitiendo representar progresivamente:
-
-Nivel 1 — Contexto
-Nivel 2 — Contenedores
-Nivel 3 — Componentes
-Nivel 4 — Código, cuando sea necesario
-Estado actual del proyecto
-NEVI se encuentra en proceso de evolución desde una arquitectura basada principalmente en servicios gestionados en la nube hacia una arquitectura con backend propio y persistencia local.
-
-Los principales cambios respecto a la versión anterior incluyen:
-
-Incorporación de un backend desarrollado en Java.
-Incorporación de Maven para la gestión del backend.
-Incorporación de Docker y Docker Compose.
-Migración de la persistencia desde la nube hacia un entorno local.
-Separación más clara entre frontend, backend y servicios.
-Incorporación de una capa services/api.js para la comunicación con el backend.
-Incorporación de un directorio context en el frontend.
-Actualización de la documentación arquitectónica.
-Mantenimiento de Groq como servicio externo para las funcionalidades de IA.
 Autores
 Nixson Pinzón
 Roberto Hernández
@@ -405,8 +200,4 @@ Camilo Flórez
 Michael Lopez
 Proyecto académico — Ingeniería de Sistemas
 
-<div align="center">
-
-React · Java · Maven · Docker · Groq
-
-</div>
+<div align="center"> Hecho con ❤️ usando React · Java · Maven · Docker · Groq </div>
