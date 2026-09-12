@@ -6,7 +6,7 @@ Categoría confirmada por el profesor: **pendiente de transcribir** — el equip
 debe anexar la captura o mensaje original donde el profesor confirma la
 categoría de NEVI (igual que exige el checklist del curso).
 
-## Sistema base adoptado
+## Sistema base 
 
 NEVI (Network Of Virtual Interaction) es una reescritura completa (frontend +
 backend + base de datos), no la adopción de un proyecto existente. Es una
