@@ -1,15 +1,15 @@
 <div align="center">
 
-# NEVI
+# NOVI
 ### Network Of Virtual Interaction
 
 **Plataforma educativa de comunicación y aprendizaje asistida por IA**
 
 </div>
 
-## ¿Qué es NEVI?
+## ¿Qué es NOVI?
 
-NEVI es una SPA (Single Page Application) que conecta profesores y estudiantes en un entorno educativo. Los profesores pueden crear y administrar grupos, generar actividades con ayuda de IA y utilizar diferentes herramientas para apoyar el proceso académico.
+NOVI es una SPA (Single Page Application) que conecta profesores y estudiantes en un entorno educativo. Los profesores pueden crear y administrar grupos, generar actividades con ayuda de IA y utilizar diferentes herramientas para apoyar el proceso académico.
 
 Los estudiantes pueden unirse a grupos mediante un código, consultar actividades, participar en el espacio de comunicación en tiempo real y acceder a herramientas de apoyo académico impulsadas por inteligencia artificial.
 
