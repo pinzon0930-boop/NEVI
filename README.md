@@ -252,13 +252,3 @@ Reinicia Docker Desktop y confirma que tiene acceso a internet (`docker run --rm
 
 Proyecto académico — Ingeniería de Sistemas
 
-<div align="center">
-
-Hecho con ❤️ usando React · Java · Maven · Docker · Groq
-
-</div>
-
-<div align="center">
-Hecho con ❤️ usando React · Java · Maven · Docker · Groq
-
-</div>
