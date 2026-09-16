@@ -73,6 +73,12 @@
       <scope>runtime</scope>
     </dependency>
 
+   <!-- ── Validación ────────────────────────────────────────── -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
     <!-- ── Actuator (expone /actuator/health para el healthcheck de Docker) ── -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
