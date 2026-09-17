@@ -154,29 +154,6 @@ Para detener todo:
 docker compose down
 ```
 
-### Opción B: Manual, sin Docker
-
-**1. Clonar el repositorio y configurar el `.env`** (igual que arriba).
-
-**2. Preparar la base de datos**
-
-Crea manualmente una base de datos PostgreSQL local que coincida con `DB_NAME`, `DB_USER` y `DB_PASSWORD` de tu `.env`.
-
-**3. Ejecutar el backend**
-```bash
-cd backend
-mvn spring-boot:run
-```
-El backend queda disponible en `http://localhost:8080`.
-
-**4. Ejecutar el frontend**
-```bash
-cd frontend
-npm install
-npm run dev
-```
-El frontend queda disponible en `http://localhost:5173`.
-
 ## Variables de entorno
 
 Todas las variables están documentadas en [`.env.example`](.env.example). Cópialo a `.env` antes de arrancar el proyecto y **nunca subas tu `.env` real al repositorio**.
