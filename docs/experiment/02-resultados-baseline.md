@@ -82,3 +82,19 @@ recomienda una corrida adicional con **20-30 VUs concurrentes** — por
 encima del límite de 10 conexiones — y comparar si aparecen errores
 `HikariPool-1 - Connection is not available`. Esta corrida queda fuera del
 alcance de la medición baseline actual y se documenta como trabajo futuro.
+
+---
+
+## Evidencia de reproducibilidad y orden metodológico
+
+Para evitar el sesgo de "ajustar la hipótesis después de ver los datos" (HARKing), el proceso siguió un orden estricto y verificable en el historial de GitHub del repositorio:
+
+1. **Preregistro de hipótesis** (`docs/experiment/01-preregistro.md`): se definieron los rangos esperados de p50 (100-300ms) y p95 (300-800ms) *antes* de ejecutar cualquier prueba de carga, basándose únicamente en el diseño de la arquitectura (HikariCP con pool=10, ver R-01 en `09-inventario-riesgos.md`) y no en resultados observados.
+2. **Ejecución de las mediciones** (`measurements/baseline/corrida-01.json`, `corrida-02.json`, `corrida-03.json`): las tres corridas de k6 se ejecutaron y se subieron al repositorio en un commit posterior y separado del preregistro.
+3. **Análisis de resultados** (este documento): escrito después de tener las tres corridas completas, comparando explícitamente contra los rangos declarados en el paso 1.
+
+Esta secuencia es auditable directamente en GitHub: la pestaña *History* de cada archivo (`01-preregistro.md`, los tres JSON de `measurements/baseline/`, y este documento) muestra que los commits respetan ese orden cronológico, con el preregistro commiteado primero y sin ediciones posteriores a los valores de hipótesis tras conocer los resultados. Cualquier miembro del comité puede verificarlo abriendo el historial de commits de esos archivos.
+
+### Por qué esto importa para la validez del experimento
+
+Sin este orden, los rangos "esperados" podrían reconstruirse a posteriori para que coincidan artificialmente con lo medido, invalidando la comparación. Al declarar la hipótesis en un documento separado y commiteado antes de correr k6, el equipo se compromete públicamente con una predicción falsable — y de hecho la hipótesis fue **refutada** (p95 real de 18.17ms vs. 300-800ms esperado), lo cual es evidencia adicional de que no hubo ajuste retroactivo: no había incentivo para predecir un rango que luego se incumpliría por un margen tan amplio.
