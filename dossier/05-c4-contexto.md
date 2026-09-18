@@ -2,9 +2,9 @@
 
 ## 1. Objetivo
 
-El modelo C4 Nivel 1 representa el contexto general del sistema **NEVI
+El modelo C4 Nivel 1 representa el contexto general del sistema **NOVI
 (Network Of Virtual Interaction)**, identificando los usuarios que interactúan
-con la plataforma y los sistemas externos con los que NEVI establece
+con la plataforma y los sistemas externos con los que NOVI establece
 comunicación.
 
 Esta vista proporciona una representación de alto nivel del sistema, sin
@@ -15,7 +15,7 @@ backend, bases de datos o protocolos de comunicación.
 
 ## 2. Propósito de la vista
 
-Esta vista permite comprender el sistema NEVI desde una perspectiva general,
+Esta vista permite comprender el sistema NOVI desde una perspectiva general,
 identificando los principales actores que utilizan la plataforma, las
 funcionalidades que realizan y los servicios externos con los que el sistema
 interactúa.
@@ -24,8 +24,8 @@ La representación permite establecer el límite del sistema antes de
 profundizar en su arquitectura interna mediante los modelos C4 Nivel 2 y
 Nivel 3.
 
-En este nivel, NEVI se considera como un único sistema, independientemente de
-las tecnologías utilizadas internamente.
+En este nivel, NOVI se considera como un único sistema,
+independientemente de las tecnologías utilizadas internamente.
 
 ---
 
@@ -37,7 +37,7 @@ Esta vista está dirigida principalmente a:
 * Arquitectos de software.
 * Desarrolladores.
 * Integrantes del equipo del proyecto.
-* Personas interesadas en comprender el propósito y contexto general de NEVI.
+* Personas interesadas en comprender el propósito y contexto general de NOVI.
 
 ---
 
@@ -47,9 +47,9 @@ Esta vista está dirigida principalmente a:
 
 **Tipo:** Usuario de la plataforma.
 
-El estudiante utiliza NEVI para participar en grupos académicos, consultar
+El estudiante utiliza NOVI para participar en grupos académicos, consultar
 actividades, realizar entregas, comunicarse mediante el chat grupal y utilizar
-las herramientas de inteligencia artificial disponibles en la plataforma.
+las herramientas de apoyo académico disponibles en la plataforma.
 
 Entre sus principales interacciones se encuentran:
 
@@ -67,7 +67,7 @@ Entre sus principales interacciones se encuentran:
 
 **Tipo:** Usuario de la plataforma.
 
-El profesor utiliza NEVI para administrar sus grupos y gestionar actividades
+El profesor utiliza NOVI para administrar sus grupos y gestionar actividades
 académicas, además de utilizar las herramientas de inteligencia artificial
 disponibles para apoyar la creación y evaluación de contenidos.
 
@@ -84,15 +84,18 @@ Entre sus principales interacciones se encuentran:
 * Consultar información y estado de los grupos.
 * Comunicarse con los estudiantes mediante el chat grupal.
 
+Estas funcionalidades corresponden a las capacidades descritas actualmente
+en el repositorio del proyecto.
+
 ---
 
-## 4.3 NEVI
+## 4.3 NOVI
 
 **Tipo:** Sistema principal.
 
 **Nombre:** Network Of Virtual Interaction.
 
-NEVI es una plataforma educativa orientada a la interacción entre estudiantes
+NOVI es una plataforma educativa orientada a la interacción entre estudiantes
 y profesores.
 
 El sistema proporciona funcionalidades relacionadas con:
@@ -101,13 +104,17 @@ El sistema proporciona funcionalidades relacionadas con:
 * Gestión de grupos académicos.
 * Gestión de actividades.
 * Entrega de actividades.
-* Comunicación grupal.
+* Comunicación grupal en tiempo real.
 * Herramientas de inteligencia artificial.
 * Apoyo académico.
 * Generación de contenido educativo.
 
-En el Nivel 1, todas las funcionalidades internas de NEVI se representan como
+En el Nivel 1, todas las funcionalidades internas de NOVI se representan como
 parte de un único sistema, sin detallar su implementación tecnológica.
+
+La aplicación se ejecuta localmente mediante una arquitectura compuesta por
+frontend, backend y PostgreSQL, utilizando Docker Compose para levantar los
+servicios.
 
 ---
 
@@ -115,10 +122,10 @@ parte de un único sistema, sin detallar su implementación tecnológica.
 
 **Tipo:** Sistema externo.
 
-Groq API es el servicio externo utilizado por NEVI para proporcionar las
+Groq API es el servicio externo utilizado por NOVI para proporcionar las
 capacidades de inteligencia artificial de la plataforma.
 
-NEVI utiliza este servicio para funcionalidades como:
+NOVI utiliza este servicio para funcionalidades como:
 
 * Asistencia académica.
 * Generación de actividades.
@@ -128,9 +135,18 @@ NEVI utiliza este servicio para funcionalidades como:
 * Explicación simplificada de actividades.
 * Generación de resúmenes de grupos.
 
-La integración con Groq se encuentra implementada en el frontend mediante el
-servicio `frontend/src/services/groq.js`, que centraliza las solicitudes de
-inteligencia artificial.
+La integración con Groq se encuentra implementada principalmente mediante:
+
+```text
+frontend/src/services/groq.js
+```
+
+Este servicio centraliza las solicitudes relacionadas con las funcionalidades
+de inteligencia artificial.
+
+> **Nota:** Aunque la aplicación, el backend y la base de datos se ejecutan
+> localmente, Groq API continúa siendo un servicio externo. Por esta razón,
+> debe mantenerse en el diagrama de contexto como sistema externo.
 
 ---
 
@@ -140,10 +156,14 @@ Las principales relaciones identificadas en el contexto del sistema son:
 
 | Origen     | Relación                                      | Destino  |
 | ---------- | --------------------------------------------- | -------- |
-| Estudiante | Utiliza la plataforma                         | NEVI     |
-| Profesor   | Administra y utiliza la plataforma            | NEVI     |
-| NEVI       | Solicita servicios de inteligencia artificial | Groq API |
-| Groq API   | Devuelve respuestas generadas                 | NEVI     |
+| Estudiante | Utiliza la plataforma                         | NOVI     |
+| Profesor   | Administra y utiliza la plataforma            | NOVI     |
+| NOVI       | Solicita servicios de inteligencia artificial | Groq API |
+| Groq API   | Devuelve respuestas generadas                 | NOVI     |
+
+La comunicación con la base de datos **no se representa en este nivel**, ya que
+PostgreSQL forma parte de la implementación interna de NOVI y se detallará en
+el C4 Nivel 2.
 
 ---
 
@@ -164,7 +184,7 @@ flowchart LR
     Genera quizzes y rúbricas<br/>
     Utiliza herramientas de IA"]
 
-    NEVI["NEVI<br/><br/>
+    NOVI["NOVI<br/><br/>
     Network Of Virtual Interaction<br/><br/>
     Plataforma educativa<br/>
     Gestión académica<br/>
@@ -175,18 +195,18 @@ flowchart LR
     Servicio externo de<br/>
     Inteligencia Artificial"]
 
-    EST -->|"Utiliza"| NEVI
-    PROF -->|"Administra y utiliza"| NEVI
+    EST -->|"Utiliza"| NOVI
+    PROF -->|"Administra y utiliza"| NOVI
 
-    NEVI -->|"Solicita servicios de IA"| GROQ
-    GROQ -->|"Devuelve respuestas generadas"| NEVI
+    NOVI -->|"Solicita servicios de IA"| GROQ
+    GROQ -->|"Devuelve respuestas generadas"| NOVI
 
     classDef person fill:#1565C0,stroke:#64B5F6,color:#FFFFFF,stroke-width:2px;
     classDef system fill:#1976D2,stroke:#90CAF9,color:#FFFFFF,stroke-width:3px;
     classDef external fill:#616161,stroke:#BDBDBD,color:#FFFFFF,stroke-width:2px;
 
     class EST,PROF person;
-    class NEVI system;
+    class NOVI system;
     class GROQ external;
 ```
 
@@ -202,13 +222,14 @@ repositorio.
 | ----------- | ------------------------------------------------------------------------------------------ | -------------- |
 | Estudiante  | Funcionalidades de grupos, actividades, entregas, mensajes y asistencia académica          | **Verificado** |
 | Profesor    | Funcionalidades de creación de grupos, actividades, quizzes, rúbricas y herramientas de IA | **Verificado** |
-| NEVI        | Aplicación frontend + backend que implementa la plataforma                                 | **Verificado** |
+| NOVI        | Aplicación frontend + backend + PostgreSQL ejecutada localmente                            | **Verificado** |
 | Groq API    | `frontend/src/services/groq.js` y funciones de generación mediante IA                      | **Verificado** |
 
-Las funcionalidades de inteligencia artificial están centralizadas en
-`groq.js`, donde se implementan las operaciones de asistencia académica,
-generación de actividades, quizzes, rúbricas, retroalimentación, explicación
-simplificada y resumen de grupos.
+El repositorio identifica explícitamente el frontend, backend, PostgreSQL,
+WebSocket, autenticación JWT y la integración con Groq.
+
+La base de datos PostgreSQL se ejecuta como el contenedor `nevi-db` dentro de
+Docker Compose y utiliza el volumen `nevi_db_data` para conservar los datos.
 
 ---
 
@@ -216,44 +237,90 @@ simplificada y resumen de grupos.
 
 En este nivel se establece el siguiente límite conceptual:
 
-**Dentro del sistema:**
+### Dentro del sistema
 
-* NEVI.
+* NOVI.
 
-**Usuarios externos:**
+### Usuarios externos
 
 * Estudiante.
 * Profesor.
 
-**Sistema externo:**
+### Sistema externo
 
 * Groq API.
 
-Los componentes tecnológicos internos de NEVI, como React/Vite, Spring Boot,
-Spring Security, JWT, WebSocket/STOMP, PostgreSQL y Nginx, no se representan
-en este nivel porque forman parte de la descomposición interna del sistema y
-se detallan en el modelo C4 Nivel 2.
+### Componentes internos no representados
+
+Los siguientes elementos forman parte de la implementación interna de NOVI y
+por lo tanto no se muestran como sistemas independientes en el Nivel 1:
+
+* React + Vite.
+* Spring Boot.
+* Spring Security.
+* JWT.
+* WebSocket / STOMP.
+* PostgreSQL.
+* Docker / Docker Compose.
+* Nginx.
+
+Estos elementos serán detallados mediante los modelos C4 de Nivel 2 y Nivel 3.
 
 ---
 
-# 9. Conclusión
+# 9. Arquitectura local y límite externo
 
-El modelo C4 Nivel 1 permite representar a NEVI como un sistema educativo
+La ejecución local de NOVI puede representarse conceptualmente de la
+siguiente manera:
+
+```text
+                 ┌───────────────────────┐
+                 │        NOVI           │
+                 │                       │
+                 │  Frontend             │
+                 │  Backend              │
+                 │  PostgreSQL           │
+                 │  WebSocket            │
+                 │  Nginx                │
+                 │                       │
+                 │  EJECUCIÓN LOCAL      │
+                 └───────────┬───────────┘
+                             │
+                             │ Solicitudes de IA
+                             ▼
+                    ┌─────────────────┐
+                    │    Groq API     │
+                    │ SISTEMA EXTERNO │
+                    └─────────────────┘
+```
+
+La aplicación y sus principales servicios se levantan localmente mediante
+Docker Compose. El repositorio especifica los contenedores `nevi-db`,
+`nevi-backend` y `nevi-frontend`, mientras que Groq requiere una clave de API
+externa.
+
+---
+
+# 10. Conclusión
+
+El modelo C4 Nivel 1 permite representar a NOVI como un sistema educativo
 orientado a la interacción entre estudiantes y profesores.
 
 Los estudiantes utilizan la plataforma para participar en grupos, consultar
 y entregar actividades, comunicarse y acceder a herramientas de apoyo
 académico.
 
-Los profesores utilizan NEVI para administrar grupos, crear y gestionar
+Los profesores utilizan NOVI para administrar grupos, crear y gestionar
 actividades y utilizar herramientas de inteligencia artificial para apoyar
 diferentes procesos académicos.
 
-NEVI se comunica además con Groq API como servicio externo para proporcionar
-las funcionalidades de inteligencia artificial implementadas actualmente en
-la plataforma.
+La infraestructura principal de NOVI se ejecuta localmente mediante Docker
+Compose, incluyendo el frontend, backend y la base de datos PostgreSQL.
+
+La única comunicación externa representada en este contexto corresponde a
+Groq API, utilizada para las funcionalidades de inteligencia artificial.
 
 Esta vista establece el contexto general del sistema y sirve como punto de
 entrada para los modelos C4 de Nivel 2 y Nivel 3, donde se detallan
 respectivamente los contenedores y componentes que conforman la implementación
-de NEVI.
+de NOVI.
