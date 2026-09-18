@@ -108,3 +108,30 @@ web:
 ```
 
 **Mitigación propuesta:** Restringir al dominio específico del frontend.
+
+---
+
+## R-06 · `/api/auth/perfil` expuesto sin autenticación real (hallazgo de AuthFlowIntegrationTest)
+
+| Campo | Detalle |
+|---|---|
+| **Probabilidad** | Alta (ya estaba ocurriendo) |
+| **Impacto** | Alto |
+| **Nivel** | 🟢 Corregido |
+
+**Descripción:** `SecurityConfig.java` marcaba toda la ruta `/api/auth/**` como
+`permitAll()`, lo que dejaba `/api/auth/perfil` (que requiere token) accesible
+sin autenticación. Una petición sin token llegaba igual al controller, y como
+`@AuthenticationPrincipal` resolvía `null`, `userDetails.getUsername()`
+lanzaba una excepción que terminaba en HTTP 500 en vez de rechazar la
+petición. Se detectó al escribir `AuthFlowIntegrationTest` (ESC-05):
+el test esperaba 401 y obtuvo 500.
+
+**Evidencia:** log de CI, job "Backend — Compilar y probar", run fallido
+antes de la corrección — `AuthFlowIntegrationTest.accesoAPerfilSinToken_debeRechazarse`
+`Status expected:<401> but was:<500>`.
+
+**Corrección aplicada:** se acota `permitAll()` solo a `/api/auth/register` y
+`/api/auth/login`; se agrega un `AuthenticationEntryPoint` que devuelve 401
+(antes el default de Spring Security era 403, que tampoco cumplía ESC-03).
+

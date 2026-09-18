@@ -1,6 +1,7 @@
 package com.nevi.config;
 
 import com.nevi.security.JwtAuthFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,10 +38,20 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
             // Define qué rutas son públicas y cuáles requieren autenticación.
+            // OJO: antes esto era "/api/auth/**" permitAll, lo que dejaba /api/auth/perfil
+            // (que SÍ requiere token) público por accidente. Solo register/login son públicos.
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()   // Login y registro: sin token.
+                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .requestMatchers("/ws/**").permitAll()         // WebSocket: sin token (el token se pasa en el mensaje).
                 .anyRequest().authenticated()                  // Todo lo demás requiere JWT.
+            )
+
+            // Sin esto, Spring Security devuelve 403 por defecto ante una petición sin
+            // autenticar. ESC-03 (dossier/04-escenarios-calidad.md) exige 401 Unauthorized
+            // sin datos expuestos en el cuerpo.
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autenticado"))
             )
 
             // Sesiones stateless — Spring no guarda sesión en servidor, el JWT hace ese trabajo.
