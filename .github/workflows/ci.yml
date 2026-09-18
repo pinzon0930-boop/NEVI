@@ -39,11 +39,6 @@ jobs:
 
       - name: Compilar y ejecutar pruebas
         working-directory: backend
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/nevi_test
-          SPRING_DATASOURCE_USERNAME: nevi
-          SPRING_DATASOURCE_PASSWORD: nevi_test_pass
-          JWT_SECRET: ci-test-secret-key-32-characters-min
         run: mvn test --batch-mode
 
       - name: Build del JAR
