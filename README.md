@@ -166,8 +166,6 @@ Todas las variables están documentadas en [`.env.example`](.env.example). Cópi
 | `VITE_WS_URL` | URL del endpoint WebSocket para el chat en tiempo real |
 | `VITE_GROQ_API_KEY` | Clave de la API de Groq usada para las funcionalidades de IA |
 
-> ⚠️ **Nota de seguridad:** actualmente `VITE_GROQ_API_KEY` se usa directamente desde el frontend, lo que expone la clave en el bundle compilado del navegador. Para un entorno de producción real, se recomienda mover las llamadas a Groq detrás del backend.
-
 ## Integración con IA (Groq)
 
 NEVI utiliza la API de Groq para proporcionar diferentes funcionalidades de inteligencia artificial a profesores y estudiantes.
