@@ -1,4 +1,4 @@
-# 03 — Inventario de riesgos · NEVI
+# 09 — Inventario de riesgos · NEVI
 
 > Todos los riesgos están respaldados por evidencia empírica extraída
 > directamente del código fuente del repositorio. No se incluyen riesgos
