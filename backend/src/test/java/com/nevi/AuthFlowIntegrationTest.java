@@ -73,7 +73,7 @@ class AuthFlowIntegrationTest {
     void accesoAPerfilSinToken_debeRechazarse() throws Exception {
         // ESC-03 / QA-03 — Sin token, el sistema no debe exponer datos.
         mockMvc.perform(get("/api/auth/perfil"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -109,6 +109,6 @@ class AuthFlowIntegrationTest {
     @Test
     void accesoAGrupos_sinToken_debeRechazarseCon401() throws Exception {
         mockMvc.perform(get("/api/grupos"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isUnauthorized());
     }
 }
