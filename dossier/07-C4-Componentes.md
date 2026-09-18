@@ -1,50 +1,49 @@
-# C4 Nivel 3 — Componentes NEVI
+# C4 Nivel 3 — Modelo de Componentes de NOVI
 
 ## 1. Objetivo
 
-El modelo C4 Nivel 3 presenta la descomposición interna del contenedor
-**"Aplicación Web — Frontend"** de NEVI, identificando los componentes
-arquitectónicamente relevantes que implementan las principales funcionalidades
-de la plataforma.
+El modelo C4 Nivel 3 presenta la descomposición interna del contenedor **Aplicación Web — Frontend** de **NOVI (Network Of Virtual Interaction)**, identificando los componentes arquitectónicamente relevantes que implementan las principales funcionalidades de la plataforma.
 
-El objetivo de esta vista es establecer una correspondencia verificable entre
-los componentes definidos en la arquitectura y los módulos, archivos y
-funciones presentes en la implementación actual del repositorio.
+El objetivo de esta vista es establecer una correspondencia verificable entre los componentes definidos en la arquitectura y los módulos, archivos y funciones presentes en la implementación actual del repositorio.
 
-La representación corresponde al estado actual de la aplicación frontend de
-NEVI y no a una arquitectura futura propuesta.
+La representación corresponde al estado actual de la aplicación frontend de NOVI y no a una arquitectura futura propuesta.
 
 ---
 
-## 2. Alcance
+# 2. Alcance
 
-Esta vista corresponde exclusivamente al contenedor **"Aplicación Web —
-Frontend"** identificado en el modelo C4 Nivel 2.
+Esta vista corresponde al contenedor **Aplicación Web — Frontend** identificado en el modelo C4 Nivel 2.
 
-Se incluyen los componentes que poseen responsabilidad arquitectónica
-relevante dentro del frontend y que pueden relacionarse directamente con
-archivos y funciones existentes en:
+Se incluyen los componentes que poseen una responsabilidad funcional relevante dentro del frontend y que pueden relacionarse directamente con archivos y funciones existentes en:
 
-`frontend/src/`
+```text
+frontend/src/
+```
 
-El backend Spring Boot, PostgreSQL y Groq API se representan como sistemas
-externos al contenedor, debido a que pertenecen a otros contenedores o
-servicios identificados en el Nivel 2.
+El Backend Spring Boot y PostgreSQL no se descomponen en este nivel, ya que pertenecen a otros contenedores del sistema y serán tratados en sus respectivos niveles de detalle.
 
-El repositorio actual organiza el frontend principalmente mediante páginas,
-componentes, contexto y servicios. Entre los servicios se encuentran
-`api.js`, `auth.js`, `grupos.js`, `actividades.js`, `mensajes.js` y
-`groq.js`.
+Groq API se representa como un sistema externo con el que los componentes de inteligencia artificial establecen comunicación.
+
+El repositorio organiza el frontend principalmente mediante páginas, componentes y servicios. Entre los servicios relevantes se encuentran:
+
+```text
+frontend/src/services/api.js
+frontend/src/services/auth.js
+frontend/src/services/grupos.js
+frontend/src/services/actividades.js
+frontend/src/services/mensajes.js
+frontend/src/services/groq.js
+```
 
 ---
 
-## 3. Audiencia
+# 3. Audiencia
 
 Esta vista está dirigida principalmente a:
 
 * Docentes y evaluadores del proyecto.
 * Arquitectos de software.
-* Desarrolladores del sistema.
+* Desarrolladores.
 * Integrantes del equipo de desarrollo.
 
 ---
@@ -55,13 +54,13 @@ Esta vista está dirigida principalmente a:
 
 **Responsabilidad:**
 
-Gestionar las operaciones de autenticación desde la interfaz web, incluyendo
-registro, inicio de sesión, cierre de sesión y recuperación de la sesión local
-del usuario.
+Gestionar las operaciones de autenticación desde la interfaz web, incluyendo registro, inicio de sesión, cierre de sesión y recuperación de la sesión local del usuario.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/services/auth.js`
+```text
+frontend/src/services/auth.js
+```
 
 **Funciones principales:**
 
@@ -71,12 +70,15 @@ del usuario.
 * `obtenerPerfil()`
 * `obtenerSesionLocal()`
 
-El componente utiliza el cliente HTTP centralizado para comunicarse con los
-endpoints `/api/auth/register`, `/api/auth/login` y `/api/auth/perfil`.
+El componente utiliza el cliente API para comunicarse con los endpoints relacionados con autenticación:
 
-El token JWT recibido por el backend se almacena en `localStorage` bajo
-`nevi_token`, mientras que la información básica del usuario se almacena bajo
-`nevi_user`.
+```text
+POST /api/auth/register
+POST /api/auth/login
+GET /api/auth/perfil
+```
+
+El token JWT recibido del backend se almacena localmente para mantener la sesión del usuario.
 
 ---
 
@@ -84,18 +86,17 @@ El token JWT recibido por el backend se almacena en `localStorage` bajo
 
 **Responsabilidad:**
 
-Centralizar las solicitudes HTTP realizadas desde el frontend hacia el
-backend Spring Boot.
+Centralizar las solicitudes HTTP realizadas desde el frontend hacia el Backend Spring Boot.
 
-Este componente evita que cada módulo tenga que implementar individualmente
-la lógica de comunicación HTTP y permite adjuntar automáticamente el token
-JWT cuando existe una sesión autenticada.
+Este componente evita que cada módulo tenga que implementar individualmente la lógica de comunicación HTTP y permite incluir automáticamente el token JWT cuando existe una sesión autenticada.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/services/api.js`
+```text
+frontend/src/services/api.js
+```
 
-**Símbolos principales:**
+**Funciones principales:**
 
 * `request()`
 * `api.get()`
@@ -103,11 +104,15 @@ JWT cuando existe una sesión autenticada.
 * `api.put()`
 * `api.delete()`
 
-El módulo obtiene la URL base mediante `VITE_API_URL` y agrega el encabezado:
+El módulo obtiene la URL base mediante:
 
-`Authorization: Bearer <token>`
+```text
+VITE_API_URL
+```
 
-cuando existe un token almacenado en `localStorage`.
+y agrega el encabezado de autorización cuando existe un token almacenado localmente.
+
+Este componente funciona como módulo transversal utilizado por diferentes servicios del frontend.
 
 ---
 
@@ -115,15 +120,19 @@ cuando existe un token almacenado en `localStorage`.
 
 **Responsabilidad:**
 
-Permitir la creación, consulta y unión a grupos académicos.
+Gestionar desde el frontend las operaciones relacionadas con los grupos académicos.
 
-El componente soporta diferentes operaciones según el rol del usuario,
-incluyendo la creación de grupos por parte de profesores y la incorporación
-de estudiantes mediante un código de acceso.
+Permite realizar operaciones como:
 
-**Implementación verificable:**
+* Crear grupos.
+* Consultar grupos.
+* Unirse a grupos mediante código.
 
-`frontend/src/services/grupos.js`
+**Implementación:**
+
+```text
+frontend/src/services/grupos.js
+```
 
 **Funciones principales:**
 
@@ -133,12 +142,13 @@ de estudiantes mediante un código de acceso.
 
 **Endpoints utilizados:**
 
-* `POST /api/grupos`
-* `GET /api/grupos`
-* `POST /api/grupos/unirse`
+```text
+POST /api/grupos
+GET /api/grupos
+POST /api/grupos/unirse
+```
 
 El backend identifica al usuario mediante el JWT asociado a las solicitudes.
-Para unirse a un grupo se utiliza un código de seis caracteres.
 
 ---
 
@@ -146,16 +156,20 @@ Para unirse a un grupo se utiliza un código de seis caracteres.
 
 **Responsabilidad:**
 
-Gestionar desde el frontend las operaciones relacionadas con las actividades
-académicas de los grupos.
+Gestionar desde el frontend las operaciones relacionadas con las actividades académicas.
 
-Permite consultar las actividades, crear nuevas actividades, registrar la
-entrega de una actividad y consultar las actividades entregadas por el
-estudiante.
+Permite:
 
-**Implementación verificable:**
+* Consultar actividades.
+* Crear actividades.
+* Registrar entregas.
+* Consultar entregas realizadas.
 
-`frontend/src/services/actividades.js`
+**Implementación:**
+
+```text
+frontend/src/services/actividades.js
+```
 
 **Funciones principales:**
 
@@ -166,13 +180,14 @@ estudiante.
 
 **Endpoints utilizados:**
 
-* `GET /api/actividades`
-* `POST /api/actividades`
-* `POST /api/actividades/{id}/entregar`
-* `GET /api/actividades/mis-entregas`
+```text
+GET /api/actividades
+POST /api/actividades
+POST /api/actividades/{id}/entregar
+GET /api/actividades/mis-entregas
+```
 
-La implementación también realiza la conversión de la fecha de entrega al
-formato utilizado por el backend.
+Este componente utiliza el cliente API para comunicarse con el backend.
 
 ---
 
@@ -180,15 +195,18 @@ formato utilizado por el backend.
 
 **Responsabilidad:**
 
-Gestionar la consulta y envío de mensajes de los grupos y establecer la
-comunicación en tiempo real mediante WebSocket.
+Gestionar los mensajes de los grupos y establecer la comunicación en tiempo real utilizada para el chat.
 
-Este componente combina comunicación HTTP para la persistencia y consulta de
-mensajes con WebSocket/STOMP para recibir nuevos mensajes en tiempo real.
+Este componente combina:
 
-**Implementación verificable:**
+* Comunicación HTTP para consultar y enviar información.
+* WebSocket/STOMP para recibir mensajes en tiempo real.
 
-`frontend/src/services/mensajes.js`
+**Implementación:**
+
+```text
+frontend/src/services/mensajes.js
+```
 
 **Funciones principales:**
 
@@ -199,31 +217,38 @@ mensajes con WebSocket/STOMP para recibir nuevos mensajes en tiempo real.
 
 El módulo utiliza:
 
-* `@stomp/stompjs`
-* `sockjs-client`
+```text
+@stomp/stompjs
+sockjs-client
+```
 
-y establece la conexión utilizando `VITE_WS_URL`.
+y configura la conexión mediante:
 
-Los mensajes recibidos se obtienen mediante una suscripción STOMP al topic:
+```text
+VITE_WS_URL
+```
 
-`/topic/grupo/{grupoId}`
+La comunicación en tiempo real utiliza suscripciones STOMP a los topics correspondientes a los grupos.
 
-El token JWT también se envía en las cabeceras de conexión del WebSocket.
+El WebSocket no constituye un componente C4 independiente del frontend ni un contenedor independiente. Es un mecanismo de comunicación entre este componente y el contenedor Backend.
 
 ---
 
-## 4.6 Componente de Integración con Inteligencia Artificial
+# 5. Componentes de Inteligencia Artificial
+
+## 5.1 Componente de Integración con Inteligencia Artificial
 
 **Responsabilidad:**
 
-Centralizar las solicitudes realizadas desde el frontend hacia Groq API y
-proporcionar las diferentes capacidades de inteligencia artificial de NEVI.
+Centralizar las solicitudes realizadas desde el frontend hacia Groq API y proporcionar una interfaz común para las diferentes funcionalidades de inteligencia artificial.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
-**Símbolos principales:**
+**Funciones principales:**
 
 * `llamarGroq()`
 * `preguntarIA()`
@@ -234,408 +259,420 @@ proporcionar las diferentes capacidades de inteligencia artificial de NEVI.
 * `resumirActividad()`
 * `generarResumenGrupo()`
 
-El módulo centraliza las solicitudes mediante `llamarGroq()` y utiliza el
-endpoint de chat completions de Groq. El modelo configurado actualmente en el
-archivo es `openai/gpt-oss-20b`.
+Este módulo centraliza las solicitudes realizadas al servicio externo de inteligencia artificial.
 
 ---
 
-## 4.7 Componente de Asistencia Académica
+## 5.2 Componente de Asistencia Académica
 
 **Responsabilidad:**
 
-Proporcionar al estudiante un asistente académico capaz de responder
-preguntas y explicar conceptos mediante inteligencia artificial.
+Proporcionar al estudiante un asistente académico capaz de responder preguntas mediante inteligencia artificial.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/components/AsistenteIA.jsx`
+```text
+frontend/src/components/AsistenteIA.jsx
+```
 
 **Servicio utilizado:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
 **Función utilizada:**
 
-`preguntarIA()`
+```text
+preguntarIA()
+```
 
-La función `preguntarIA()` utiliza el componente de integración con Groq para
-enviar la pregunta del estudiante y obtener una respuesta generada.
+El componente recibe la pregunta del estudiante y utiliza el servicio de integración con Groq para obtener una respuesta generada.
 
 ---
 
-## 4.8 Componente de Generación de Actividades mediante IA
+## 5.3 Componente de Generación de Actividades mediante IA
 
 **Responsabilidad:**
 
-Asistir al profesor en la creación de actividades académicas mediante la
-generación automática de un título y una descripción a partir de un tema.
+Asistir al profesor en la creación de actividades académicas mediante la generación automática de contenido a partir de un tema.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/components/CrearActividad.jsx`
+```text
+frontend/src/components/CrearActividad.jsx
+```
 
 **Servicio utilizado:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
 **Función utilizada:**
 
-`generarActividad()`
+```text
+generarActividad()
+```
 
-La función recibe el tema indicado por el profesor y solicita a Groq la
-generación de una actividad educativa con título y descripción.
+La función recibe el tema indicado por el profesor y solicita a Groq la generación de contenido para la actividad.
 
 ---
 
-## 4.9 Componente de Generación de Quizzes
+## 5.4 Componente de Generación de Quizzes
 
 **Responsabilidad:**
 
-Permitir al profesor generar preguntas de opción múltiple mediante
-inteligencia artificial.
+Permitir al profesor generar preguntas de opción múltiple mediante inteligencia artificial.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/components/ModalQuiz.jsx`
+```text
+frontend/src/components/ModalQuiz.jsx
+```
 
 **Servicio utilizado:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
 **Función utilizada:**
 
-`generarQuiz()`
+```text
+generarQuiz()
+```
 
-La función recibe el tema y la cantidad de preguntas y solicita una respuesta
-estructurada en JSON con las preguntas, opciones y respuestas correctas.
+La función recibe el tema y la cantidad de preguntas y solicita a Groq la generación de las preguntas correspondientes.
 
 ---
 
-## 4.10 Componente de Generación de Rúbricas
+## 5.5 Componente de Generación de Rúbricas
 
 **Responsabilidad:**
 
-Asistir al profesor en la creación de instrumentos de evaluación mediante la
-generación de criterios y niveles de desempeño.
+Asistir al profesor en la creación de instrumentos de evaluación mediante la generación de criterios y niveles de desempeño.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/components/ModalRubrica.jsx`
+```text
+frontend/src/components/ModalRubrica.jsx
+```
 
 **Servicio utilizado:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
 **Función utilizada:**
 
-`generarRubrica()`
+```text
+generarRubrica()
+```
 
-La función recibe el título y la descripción de una actividad y genera una
-rúbrica con criterios y niveles de evaluación.
+La función recibe la información de la actividad y solicita a Groq la generación de una rúbrica.
 
 ---
 
-## 4.11 Componente de Retroalimentación mediante IA
+## 5.6 Componente de Retroalimentación mediante IA
 
 **Responsabilidad:**
 
-Generar retroalimentación constructiva a partir de una actividad y de la
-respuesta proporcionada por un estudiante.
+Generar retroalimentación a partir de una actividad y de la respuesta proporcionada por un estudiante.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/components/ModalRetroalimentacion.jsx`
+```text
+frontend/src/components/ModalRetroalimentacion.jsx
+```
 
 **Servicio utilizado:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
 **Función utilizada:**
 
-`generarRetroalimentacion()`
+```text
+generarRetroalimentacion()
+```
 
-La función recibe el título de la actividad y la respuesta del estudiante y
-solicita a Groq fortalezas, áreas de mejora y sugerencias concretas.
+La función utiliza la información de la actividad y la respuesta del estudiante para solicitar a Groq una retroalimentación generada.
 
 ---
 
-## 4.12 Componente de Explicación Simplificada
+## 5.7 Componente de Explicación Simplificada
 
 **Responsabilidad:**
 
-Facilitar la comprensión de las actividades mediante una explicación en
-lenguaje sencillo.
+Facilitar la comprensión de las actividades mediante una explicación en lenguaje sencillo.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/components/ModalExplicacion.jsx`
+```text
+frontend/src/components/ModalExplicacion.jsx
+```
 
 **Servicio utilizado:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
 **Función utilizada:**
 
-`resumirActividad()`
+```text
+resumirActividad()
+```
 
-La función recibe el título y descripción de una actividad y genera una
-explicación simplificada orientada al estudiante.
+La función recibe información de la actividad y solicita a Groq una explicación simplificada.
 
 ---
 
-## 4.13 Componente de Resumen del Grupo
+## 5.8 Componente de Resumen del Grupo
 
 **Responsabilidad:**
 
-Analizar la información de las actividades de un grupo y generar un resumen
-del estado del grupo mediante inteligencia artificial.
+Generar un resumen del estado de un grupo utilizando la información disponible de sus actividades.
 
-**Implementación verificable:**
+**Implementación:**
 
-`frontend/src/pages/GrupoDetalle.jsx`
+```text
+frontend/src/pages/GrupoDetalle.jsx
+```
 
 **Servicio utilizado:**
 
-`frontend/src/services/groq.js`
+```text
+frontend/src/services/groq.js
+```
 
 **Función utilizada:**
 
-`generarResumenGrupo()`
+```text
+generarResumenGrupo()
+```
 
-Esta funcionalidad utiliza la información de las actividades para solicitar
-a Groq un análisis del estado del grupo. El README del repositorio identifica
-esta función como una de las capacidades de IA disponibles para profesores.
+Esta funcionalidad utiliza la información de las actividades del grupo para solicitar a Groq un resumen generado mediante inteligencia artificial.
 
 ---
 
-# 5. Diagrama C4 Nivel 3
+# 6. Diagrama C4 Nivel 3
+
+El siguiente diagrama representa la descomposición del contenedor **Aplicación Web — Frontend**.
 
 ```mermaid
 flowchart TB
 
-    subgraph NEVI["NEVI — Aplicación Web / Frontend"]
+    subgraph WEB["NOVI — Aplicación Web / Frontend"]
         direction TB
 
-        subgraph CORE["Componentes funcionales"]
-            direction LR
+        AUTH["Autenticación<br/><br/>
+        Registro<br/>
+        Inicio de sesión<br/>
+        Cierre de sesión<br/>
+        Gestión de sesión"]
 
-            AUTHC["Autenticación<br/><br/>
-            Registro<br/>
-            Inicio de sesión<br/>
-            Cierre de sesión<br/>
-            Gestión de sesión"]
+        API["Cliente API<br/><br/>
+        Solicitudes HTTP<br/>
+        Gestión de peticiones<br/>
+        Inclusión de JWT"]
 
-            APIC["Cliente API<br/><br/>
-            Cliente HTTP centralizado<br/>
-            Gestión de peticiones<br/>
-            Inclusión automática de JWT"]
+        GROUP["Gestión de Grupos<br/><br/>
+        Crear grupos<br/>
+        Consultar grupos<br/>
+        Unirse mediante código"]
 
-            GROUP["Gestión de Grupos<br/><br/>
-            Crear grupos<br/>
-            Consultar grupos<br/>
-            Unirse mediante código"]
+        ACT["Gestión de Actividades<br/><br/>
+        Consultar actividades<br/>
+        Crear actividades<br/>
+        Registrar entregas"]
 
-            ACT["Gestión de Actividades<br/><br/>
-            Consultar actividades<br/>
-            Crear actividades<br/>
-            Registrar entregas"]
+        MSG["Gestión de Mensajes<br/><br/>
+        Consultar mensajes<br/>
+        Enviar mensajes<br/>
+        WebSocket / STOMP"]
 
-            MSG["Gestión de Mensajes<br/><br/>
-            Consultar mensajes<br/>
-            Enviar mensajes<br/>
-            Comunicación en tiempo real"]
+        AI["Integración con IA<br/><br/>
+        llamarGroq()<br/>
+        Servicios de inteligencia artificial"]
 
-        end
+        TUTOR["Asistencia Académica<br/><br/>
+        preguntarIA()"]
 
-        subgraph AI["Componentes de Inteligencia Artificial"]
-            direction LR
+        GENACT["Generación de Actividades<br/><br/>
+        generarActividad()"]
 
-            TUTOR["Asistencia Académica<br/><br/>
-            Tutor NEVI<br/>
-            Consultas académicas"]
+        QUIZ["Generación de Quizzes<br/><br/>
+        generarQuiz()"]
 
-            GENACT["Generación de Actividades<br/><br/>
-            Títulos<br/>
-            Descripciones<br/>
-            Generación mediante IA"]
+        RUBRIC["Generación de Rúbricas<br/><br/>
+        generarRubrica()"]
 
-            QUIZ["Generación de Quizzes<br/><br/>
-            Preguntas<br/>
-            Opción múltiple<br/>
-            Respuestas correctas"]
+        FEEDBACK["Retroalimentación IA<br/><br/>
+        generarRetroalimentacion()"]
 
-            RUBRIC["Generación de Rúbricas<br/><br/>
-            Criterios<br/>
-            Niveles de evaluación"]
+        EXPLAIN["Explicación Simplificada<br/><br/>
+        resumirActividad()"]
 
-            FEEDBACK["Retroalimentación IA<br/><br/>
-            Análisis de respuestas<br/>
-            Fortalezas<br/>
-            Sugerencias"]
+        SUMMARY["Resumen del Grupo<br/><br/>
+        generarResumenGrupo()"]
 
-            EXPLAIN["Explicación Simplificada<br/><br/>
-            Explicación de actividades<br/>
-            Lenguaje sencillo"]
+        AUTH -->|"Utiliza"| API
+        GROUP -->|"Utiliza"| API
+        ACT -->|"Utiliza"| API
+        MSG -->|"Utiliza"| API
 
-            SUMMARY["Resumen del Grupo<br/><br/>
-            Análisis de actividades<br/>
-            Estado del grupo"]
-        end
-
-        AUTHC -->|"Utiliza"| APIC
-        GROUP -->|"Utiliza"| APIC
-        ACT -->|"Utiliza"| APIC
-        MSG -->|"Utiliza"| APIC
-
-        MSG -->|"WebSocket / STOMP"| WS
-
-        TUTOR -->|"Utiliza"| GROQ
-        GENACT -->|"Utiliza"| GROQ
-        QUIZ -->|"Utiliza"| GROQ
-        RUBRIC -->|"Utiliza"| GROQ
-        FEEDBACK -->|"Utiliza"| GROQ
-        EXPLAIN -->|"Utiliza"| GROQ
-        SUMMARY -->|"Utiliza"| GROQ
+        TUTOR -->|"Utiliza"| AI
+        GENACT -->|"Utiliza"| AI
+        QUIZ -->|"Utiliza"| AI
+        RUBRIC -->|"Utiliza"| AI
+        FEEDBACK -->|"Utiliza"| AI
+        EXPLAIN -->|"Utiliza"| AI
+        SUMMARY -->|"Utiliza"| AI
     end
 
-    BACK["Backend Spring Boot<br/><br/>
+    BACK["Backend<br/><br/>
     Java 21 + Spring Boot<br/>
     API REST<br/>
-    Spring Security + JWT"]
-
-    WS["Backend WebSocket<br/><br/>
-    STOMP + SockJS<br/>
-    Comunicación en tiempo real"]
+    JWT<br/>
+    WebSocket / STOMP"]
 
     GROQ["Groq API<br/><br/>
-    Servicio externo de<br/>
+    Sistema externo<br/>
     Inteligencia Artificial"]
 
-    DB["PostgreSQL 16<br/><br/>
-    Persistencia de datos"]
+    API -->|"HTTP / REST"| BACK
+    MSG -->|"WebSocket / STOMP"| BACK
 
-    AUTHC -->|"Registro / Login / Perfil"| BACK
-    APIC -->|"Solicitudes HTTP"| BACK
-
-    BACK -->|"Persistencia"| DB
-
-    WS -->|"Gestiona mensajes"| BACK
-
-    classDef component fill:#1976D2,stroke:#90CAF9,color:#FFFFFF,stroke-width:2px;
-    classDef ai fill:#1565C0,stroke:#64B5F6,color:#FFFFFF,stroke-width:2px;
-    classDef external fill:#616161,stroke:#BDBDBD,color:#FFFFFF,stroke-width:2px;
-
-    class AUTHC,APIC,GROUP,ACT,MSG component;
-    class TUTOR,GENACT,QUIZ,RUBRIC,FEEDBACK,EXPLAIN,SUMMARY ai;
-    class BACK,WS,DB,GROQ external;
+    AI -->|"Solicitudes de IA"| GROQ
+    GROQ -->|"Respuestas generadas"| AI
 ```
 
 ---
 
-# 6. Trazabilidad estricta
+# 7. Relaciones entre componentes y otros contenedores
 
-La siguiente tabla establece la correspondencia entre los componentes
-arquitectónicos representados en el modelo C4 Nivel 3 y los elementos
-verificables de la implementación actual de NEVI.
+Los componentes del frontend se relacionan con los demás elementos de la arquitectura de NOVI de la siguiente manera:
 
-| Nivel C4 | Nombre exacto del elemento           | Responsabilidad declarada                                                                           | Archivo / módulo real                                | Clase, símbolo o configuración verificable                                                           | Relación arquitectónica comprobada        | Estado         |
-| -------- | ------------------------------------ | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------- | -------------- |
-| C2       | Aplicación Web — Frontend            | Proporcionar la interfaz web de NEVI y coordinar la interacción con los servicios de la plataforma. | `frontend/src/`                                      | `App.jsx`, `main.jsx`, `pages/`, `components/`, `services/`                                          | Usuario → Aplicación Web                  | **Verificado** |
-| C2       | Backend Spring Boot                  | Procesar la lógica de negocio y exponer la API de NEVI.                                             | `backend/`                                           | Aplicación Spring Boot                                                                               | Frontend → Backend                        | **Verificado** |
-| C2       | PostgreSQL                           | Persistir la información de la plataforma.                                                          | Backend / Docker                                     | PostgreSQL 16 + Spring Data JPA                                                                      | Backend → PostgreSQL                      | **Verificado** |
-| C2       | Groq API                             | Proporcionar servicios de inteligencia artificial.                                                  | `frontend/src/services/groq.js`                      | `GROQ_URL`, `MODELO`, `API_KEY`, `llamarGroq()`                                                      | Componentes IA → Groq API                 | **Verificado** |
-| C2       | Comunicación WebSocket               | Proporcionar comunicación en tiempo real para el chat grupal.                                       | `frontend/src/services/mensajes.js`                  | `Client`, `SockJS`, `VITE_WS_URL`, `subscribe()`                                                     | Gestión de Mensajes → WebSocket           | **Verificado** |
-| C3       | Componente de Autenticación          | Gestionar registro, login, logout y sesión local.                                                   | `frontend/src/services/auth.js`                      | `registrarUsuario()`, `iniciarSesion()`, `cerrarSesion()`, `obtenerPerfil()`, `obtenerSesionLocal()` | Autenticación → Backend                   | **Verificado** |
-| C3       | Componente Cliente API               | Centralizar las solicitudes HTTP y adjuntar JWT.                                                    | `frontend/src/services/api.js`                       | `request()`, `api.get()`, `api.post()`, `api.put()`, `api.delete()`                                  | Servicios frontend → Backend              | **Verificado** |
-| C3       | Componente de Gestión de Grupos      | Crear, consultar y permitir la unión a grupos.                                                      | `frontend/src/services/grupos.js`                    | `crearGrupo()`, `obtenerMisGrupos()`, `unirseAGrupo()`                                               | Gestión de Grupos → Backend               | **Verificado** |
-| C3       | Componente de Gestión de Actividades | Consultar, crear y registrar entregas de actividades.                                               | `frontend/src/services/actividades.js`               | `obtenerActividades()`, `crearActividad()`, `entregarActividad()`, `obtenerMisEntregas()`            | Gestión de Actividades → Backend          | **Verificado** |
-| C3       | Componente de Gestión de Mensajes    | Consultar, enviar y recibir mensajes en tiempo real.                                                | `frontend/src/services/mensajes.js`                  | `obtenerMensajes()`, `enviarMensaje()`, `suscribirseAMensajes()`, `desuscribirse()`                  | Gestión de Mensajes → Backend / WebSocket | **Verificado** |
-| C3       | Integración con IA                   | Centralizar las solicitudes realizadas a Groq.                                                      | `frontend/src/services/groq.js`                      | `llamarGroq()`                                                                                       | Componentes IA → Groq API                 | **Verificado** |
-| C3       | Asistencia Académica                 | Permitir consultas académicas mediante IA.                                                          | `frontend/src/components/AsistenteIA.jsx`            | `preguntarIA()`                                                                                      | Asistencia Académica → Groq API           | **Verificado** |
-| C3       | Generación de Actividades            | Generar actividades a partir de un tema.                                                            | `frontend/src/components/CrearActividad.jsx`         | `generarActividad()`                                                                                 | Generación de Actividades → Groq API      | **Verificado** |
-| C3       | Generación de Quizzes                | Generar preguntas de opción múltiple.                                                               | `frontend/src/components/ModalQuiz.jsx`              | `generarQuiz()`                                                                                      | Generación de Quizzes → Groq API          | **Verificado** |
-| C3       | Generación de Rúbricas               | Generar criterios y niveles de evaluación.                                                          | `frontend/src/components/ModalRubrica.jsx`           | `generarRubrica()`                                                                                   | Generación de Rúbricas → Groq API         | **Verificado** |
-| C3       | Retroalimentación IA                 | Generar feedback constructivo sobre respuestas.                                                     | `frontend/src/components/ModalRetroalimentacion.jsx` | `generarRetroalimentacion()`                                                                         | Retroalimentación → Groq API              | **Verificado** |
-| C3       | Explicación Simplificada             | Explicar actividades en lenguaje sencillo.                                                          | `frontend/src/components/ModalExplicacion.jsx`       | `resumirActividad()`                                                                                 | Explicación → Groq API                    | **Verificado** |
-| C3       | Resumen del Grupo                    | Generar análisis del estado del grupo.                                                              | `frontend/src/pages/GrupoDetalle.jsx`                | `generarResumenGrupo()`                                                                              | Resumen → Groq API                        | **Verificado** |
+| Componente                | Comunicación           | Destino  |
+| ------------------------- | ---------------------- | -------- |
+| Autenticación             | HTTP / REST            | Backend  |
+| Cliente API               | HTTP / REST            | Backend  |
+| Gestión de Grupos         | Cliente API            | Backend  |
+| Gestión de Actividades    | Cliente API            | Backend  |
+| Gestión de Mensajes       | HTTP / REST            | Backend  |
+| Gestión de Mensajes       | WebSocket / STOMP      | Backend  |
+| Integración con IA        | Solicitudes de IA      | Groq API |
+| Asistencia Académica      | Utiliza integración IA | Groq API |
+| Generación de Actividades | Utiliza integración IA | Groq API |
+| Generación de Quizzes     | Utiliza integración IA | Groq API |
+| Generación de Rúbricas    | Utiliza integración IA | Groq API |
+| Retroalimentación IA      | Utiliza integración IA | Groq API |
+| Explicación Simplificada  | Utiliza integración IA | Groq API |
+| Resumen del Grupo         | Utiliza integración IA | Groq API |
 
-Las funciones de autenticación, grupos, actividades y mensajes se encuentran
-directamente implementadas en los servicios correspondientes del frontend.
-
-La integración con Groq también se encuentra centralizada en `groq.js`, donde
-se implementan las funciones de tutoría, generación de actividades, quizzes,
-rúbricas, retroalimentación, explicaciones y resumen de grupos.
+PostgreSQL no se conecta directamente con los componentes del frontend. La persistencia se realiza a través del **Backend Spring Boot**, que pertenece a otro contenedor del sistema.
 
 ---
 
-# 7. Registro de correcciones
+# 8. Trazabilidad con la implementación
 
-El siguiente registro documenta los principales ajustes realizados para
-adaptar el modelo C4 Nivel 3 a la arquitectura actual de NEVI.
+La siguiente tabla relaciona los componentes arquitectónicos con los archivos y funciones identificados en la implementación actual.
 
-| Elemento                  | Situación del modelo anterior                                    | Acción realizada                                                                                                                      | Estado         |
-| ------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| Aplicación Web            | El modelo anterior estaba construido alrededor de Supabase.      | Se reemplazó la dependencia directa de Supabase por el frontend React/Vite y el Backend Spring Boot.                                  | **Corregido**  |
-| Autenticación             | Se representaba mediante Supabase Auth.                          | Se representó mediante el servicio `auth.js`, que consume `/api/auth/*` y maneja el JWT.                                              | **Corregido**  |
-| Cliente API               | No existía como componente arquitectónico en el modelo anterior. | Se incorporó `api.js` como componente transversal para las comunicaciones HTTP.                                                       | **Corregido**  |
-| Gestión de Grupos         | Se relacionaba directamente con Supabase.                        | Se relacionó con el Backend mediante `grupos.js`.                                                                                     | **Corregido**  |
-| Gestión de Actividades    | Se relacionaba directamente con Supabase.                        | Se relacionó con el Backend mediante `actividades.js`.                                                                                | **Corregido**  |
-| Gestión de Mensajes       | Utilizaba Supabase Realtime.                                     | Se reemplazó por WebSocket utilizando STOMP y SockJS.                                                                                 | **Corregido**  |
-| Persistencia              | Se representaba PostgreSQL mediante Supabase.                    | Se representa PostgreSQL 16 accedido mediante el Backend Spring Boot.                                                                 | **Corregido**  |
-| Inteligencia Artificial   | Se mantenían las funcionalidades de Groq.                        | Se conservaron y trazaron directamente con `groq.js` y sus funciones actuales.                                                        | **Verificado** |
-| Tutor académico           | `preguntarIA()` estaba asociado al Tutor NOVI.                   | Se mantiene como componente de Asistencia Académica de NEVI.                                                                          | **Verificado** |
-| Generación de actividades | `generarActividad()` estaba asociada a NOVI.                     | Se mantiene como funcionalidad de NEVI.                                                                                               | **Verificado** |
-| Generación de quizzes     | `generarQuiz()` estaba asociada a NOVI.                          | Se mantiene y se relaciona con `ModalQuiz.jsx`.                                                                                       | **Verificado** |
-| Generación de rúbricas    | `generarRubrica()` estaba asociada a NOVI.                       | Se mantiene y se relaciona con `ModalRubrica.jsx`.                                                                                    | **Verificado** |
-| Retroalimentación         | `generarRetroalimentacion()` estaba asociada a NOVI.             | Se mantiene y se relaciona con `ModalRetroalimentacion.jsx`.                                                                          | **Verificado** |
-| Explicación simplificada  | `resumirActividad()` estaba asociada a NOVI.                     | Se mantiene y se relaciona con `ModalExplicacion.jsx`.                                                                                | **Verificado** |
-| Resumen del grupo         | `generarResumenGrupo()` estaba asociado a NOVI.                  | Se mantiene y se relaciona con `GrupoDetalle.jsx`.                                                                                    | **Verificado** |
-| Render                    | Se representaba como parte de la aplicación anterior.            | No se incluye como componente C3, debido a que corresponde a infraestructura de despliegue y no a un componente interno del frontend. | **Corregido**  |
+| Componente C4             | Archivo / módulo                                     | Funciones o elementos relacionados                                                                                                                                      |
+| ------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Autenticación             | `frontend/src/services/auth.js`                      | `registrarUsuario()`, `iniciarSesion()`, `cerrarSesion()`, `obtenerPerfil()`, `obtenerSesionLocal()`                                                                    |
+| Cliente API               | `frontend/src/services/api.js`                       | `request()`, `api.get()`, `api.post()`, `api.put()`, `api.delete()`                                                                                                     |
+| Gestión de Grupos         | `frontend/src/services/grupos.js`                    | `crearGrupo()`, `obtenerMisGrupos()`, `unirseAGrupo()`                                                                                                                  |
+| Gestión de Actividades    | `frontend/src/services/actividades.js`               | `obtenerActividades()`, `crearActividad()`, `entregarActividad()`, `obtenerMisEntregas()`                                                                               |
+| Gestión de Mensajes       | `frontend/src/services/mensajes.js`                  | `obtenerMensajes()`, `enviarMensaje()`, `suscribirseAMensajes()`, `desuscribirse()`                                                                                     |
+| Integración con IA        | `frontend/src/services/groq.js`                      | `llamarGroq()`, `preguntarIA()`, `generarActividad()`, `generarQuiz()`, `generarRubrica()`, `generarRetroalimentacion()`, `resumirActividad()`, `generarResumenGrupo()` |
+| Asistencia Académica      | `frontend/src/components/AsistenteIA.jsx`            | `preguntarIA()`                                                                                                                                                         |
+| Generación de Actividades | `frontend/src/components/CrearActividad.jsx`         | `generarActividad()`                                                                                                                                                    |
+| Generación de Quizzes     | `frontend/src/components/ModalQuiz.jsx`              | `generarQuiz()`                                                                                                                                                         |
+| Generación de Rúbricas    | `frontend/src/components/ModalRubrica.jsx`           | `generarRubrica()`                                                                                                                                                      |
+| Retroalimentación IA      | `frontend/src/components/ModalRetroalimentacion.jsx` | `generarRetroalimentacion()`                                                                                                                                            |
+| Explicación Simplificada  | `frontend/src/components/ModalExplicacion.jsx`       | `resumirActividad()`                                                                                                                                                    |
+| Resumen del Grupo         | `frontend/src/pages/GrupoDetalle.jsx`                | `generarResumenGrupo()`                                                                                                                                                 |
+
+Esta correspondencia permite verificar que los componentes representados en el modelo arquitectónico tienen una implementación concreta dentro del frontend.
 
 ---
 
-# 8. Conclusión de verificación
+# 9. Relación con Docker
 
-A partir de la revisión del repositorio actual de NEVI, se verificó que los
-principales componentes representados en el modelo C4 Nivel 3 cuentan con
-correspondencia directa en la implementación del frontend.
+El modelo C4 Nivel 3 describe los componentes internos del frontend, mientras que Docker corresponde al mecanismo de ejecución de la aplicación.
 
-Los componentes de autenticación, gestión de grupos, gestión de actividades y
-gestión de mensajes se encuentran separados en módulos específicos dentro de
-`frontend/src/services/`. Cada módulo expone funciones que corresponden a las
-responsabilidades representadas en el modelo arquitectónico.
+El frontend que contiene estos componentes se ejecuta localmente mediante el servicio Docker:
 
-También se identificó `api.js` como un componente transversal del frontend.
-Este módulo centraliza las solicitudes HTTP hacia el Backend Spring Boot y
-gestiona la inclusión del token JWT en las peticiones autenticadas.
+```text
+nevi-frontend
+```
 
-Las funcionalidades de inteligencia artificial están centralizadas en
-`frontend/src/services/groq.js`, donde existe una función común
-`llamarGroq()` y funciones específicas para las diferentes capacidades
-ofrecidas por NEVI.
+Este servicio contiene la aplicación React/Vite y utiliza Nginx para servir la aplicación construida.
 
-La comunicación en tiempo real también presenta una correspondencia directa
-con la implementación actual. `mensajes.js` utiliza `@stomp/stompjs`,
-SockJS, JWT y suscripciones a topics para recibir los mensajes de los grupos
-en tiempo real.
+Por lo tanto:
 
-Como resultado, el modelo C4 Nivel 3 representa una descomposición trazable
-del contenedor **Aplicación Web — Frontend**, relacionando los componentes
-arquitectónicos con sus archivos, funciones y servicios externos
-correspondientes.
+```text
+Docker Compose
+      │
+      ▼
+nevi-frontend
+      │
+      ▼
+Aplicación Web
+      │
+      ├── Autenticación
+      ├── Cliente API
+      ├── Gestión de Grupos
+      ├── Gestión de Actividades
+      ├── Gestión de Mensajes
+      └── Componentes de IA
+```
 
-La arquitectura actual de NEVI puede resumirse de la siguiente manera:
+Docker no representa un componente funcional del frontend y por eso no aparece como componente C4 Nivel 3.
 
-**Interfaz React → Servicios del Frontend → Backend Spring Boot → PostgreSQL**
+---
 
-con dos mecanismos complementarios:
+# 10. Conclusión
 
-**Gestión de mensajes → WebSocket/STOMP → Backend**
+El modelo C4 Nivel 3 descompone el contenedor **Aplicación Web — Frontend** de NOVI en componentes funcionales que pueden relacionarse directamente con la implementación actual del proyecto.
+
+Los principales componentes identificados son:
+
+* Autenticación.
+* Cliente API.
+* Gestión de Grupos.
+* Gestión de Actividades.
+* Gestión de Mensajes.
+* Integración con Inteligencia Artificial.
+* Asistencia Académica.
+* Generación de Actividades.
+* Generación de Quizzes.
+* Generación de Rúbricas.
+* Retroalimentación mediante IA.
+* Explicación Simplificada.
+* Resumen del Grupo.
+
+Los componentes de gestión académica utilizan el Backend Spring Boot mediante API REST, mientras que el componente de mensajes utiliza tanto comunicación HTTP como WebSocket/STOMP para la comunicación en tiempo real.
+
+Las funcionalidades de inteligencia artificial se centralizan mediante `groq.js` y se comunican con Groq API, que permanece como servicio externo.
+
+La aplicación frontend se ejecuta localmente como parte del servicio Docker `nevi-frontend`, mientras que Docker Compose coordina este servicio con el backend y PostgreSQL.
+
+La relación general de la arquitectura puede resumirse como:
+
+**Usuario → Aplicación Web → Backend → PostgreSQL**
+
+con las siguientes integraciones:
+
+**Gestión de Mensajes → WebSocket/STOMP → Backend**
 
 y
 
-**Funcionalidades de IA → `groq.js` → Groq API**
+**Componentes de IA → `groq.js` → Groq API**
 
-Esta representación corresponde al estado actual de implementación identificado
-en el repositorio NEVI.
+Esta vista corresponde al estado actual de implementación de NOVI y sirve como base para relacionar la arquitectura con el código fuente mediante el documento de **Trazabilidad**.
