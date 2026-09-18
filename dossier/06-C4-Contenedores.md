@@ -1,10 +1,10 @@
-# C4 Nivel 2 — Modelo de Contenedores de NEVI
+# C4 Nivel 2 — Modelo de Contenedores de NOVI
 
 ## 1. Objetivo
 
-El modelo C4 Nivel 2 presenta los principales contenedores que conforman el sistema **NEVI (Network Of Virtual Interaction)** y muestra cómo se relacionan entre sí, con los usuarios y con los servicios externos utilizados por la plataforma.
+El modelo C4 Nivel 2 presenta los principales contenedores que conforman el sistema **NOVI (Network Of Virtual Interaction)** y muestra cómo se relacionan entre sí, con los usuarios y con los servicios externos utilizados por la plataforma.
 
-Esta vista permite pasar del contexto general del sistema presentado en el Nivel 1 a una descripción de las principales unidades tecnológicas que implementan las funcionalidades de comunicación, gestión académica e inteligencia artificial de NEVI.
+Esta vista permite pasar del contexto general presentado en el C4 Nivel 1 a una descripción de las principales unidades tecnológicas que implementan las funcionalidades de comunicación, gestión académica e inteligencia artificial de NOVI.
 
 La representación corresponde al estado actual de la solución implementada en el repositorio y no a una arquitectura futura propuesta.
 
@@ -12,11 +12,20 @@ La representación corresponde al estado actual de la solución implementada en 
 
 ## 2. Propósito de la vista
 
-El propósito de esta vista es identificar las unidades principales que conforman la solución tecnológica actual de NEVI y las responsabilidades asociadas a cada una.
+El propósito de esta vista es identificar las principales unidades tecnológicas que conforman NOVI y describir la responsabilidad de cada una.
 
-La vista permite comprender cómo la interfaz web se comunica con el backend, cómo el backend gestiona la autenticación y el acceso a la información almacenada en PostgreSQL, cómo se establece la comunicación en tiempo real mediante WebSocket y cómo se utilizan los servicios externos de inteligencia artificial proporcionados por Groq.
+La arquitectura está compuesta principalmente por:
 
-La solución se encuentra organizada principalmente en un frontend desarrollado con React y Vite, un backend desarrollado con Java y Spring Boot y una base de datos PostgreSQL. Estos componentes pueden ejecutarse mediante Docker Compose.
+* Una aplicación web desarrollada con React y Vite.
+* Un backend desarrollado con Java y Spring Boot.
+* Una base de datos PostgreSQL.
+* Un servicio externo de inteligencia artificial proporcionado por Groq.
+
+Los servicios principales de NOVI se ejecutan **localmente mediante Docker Compose**. Docker permite empaquetar y ejecutar cada servicio de la aplicación en contenedores independientes, mientras que Docker Compose permite iniciar y coordinar el conjunto de servicios.
+
+La comunicación en tiempo real mediante WebSocket/STOMP forma parte del backend y de la aplicación web, por lo que no se representa como un contenedor independiente.
+
+De igual manera, Nginx forma parte del contenedor del frontend y se utiliza para servir la aplicación web construida para producción.
 
 ---
 
@@ -28,7 +37,7 @@ Esta vista está dirigida principalmente a:
 * Arquitectos de software.
 * Desarrolladores.
 * Integrantes del equipo del proyecto.
-* Personas interesadas en comprender la estructura tecnológica de NEVI.
+* Personas interesadas en comprender la estructura tecnológica de NOVI.
 
 ---
 
@@ -36,13 +45,23 @@ Esta vista está dirigida principalmente a:
 
 ## 4.1 Aplicación Web — Frontend
 
+**Tipo:** Contenedor de aplicación.
+
 **Responsabilidad:**
 
-Proporcionar la interfaz de usuario de NEVI y permitir la interacción de estudiantes y profesores con las funcionalidades de la plataforma.
+Proporcionar la interfaz de usuario de NOVI y permitir la interacción de estudiantes y profesores con las funcionalidades de la plataforma.
 
-El frontend implementa las interfaces para autenticación, gestión de grupos, actividades, comunicación grupal y herramientas de inteligencia artificial.
+El frontend implementa las interfaces relacionadas con:
 
-Entre sus componentes se encuentran páginas como `Login`, `Register`, `Dashboard`, `Grupos` y `GrupoDetalle`, además de componentes relacionados con actividades, quiz, rúbricas, retroalimentación y asistencia de IA.
+* Autenticación.
+* Gestión de grupos.
+* Actividades académicas.
+* Entregas.
+* Comunicación grupal.
+* Herramientas de inteligencia artificial.
+* Asistencia académica.
+
+Entre las interfaces implementadas se encuentran páginas y componentes relacionados con `Login`, `Register`, `Dashboard`, `Grupos` y `GrupoDetalle`, además de funcionalidades para actividades, quizzes, rúbricas, retroalimentación y asistencia mediante IA.
 
 **Tecnología:**
 
@@ -50,27 +69,46 @@ React 18 + Vite 5 + Tailwind CSS 3.
 
 **Implementación:**
 
-La aplicación se encuentra en el directorio:
+El frontend se encuentra en:
 
-`frontend/`
+```text
+frontend/
+```
 
-Los servicios utilizados para comunicarse con el backend y otros servicios se encuentran principalmente en:
+Los servicios utilizados para la comunicación con el backend y los servicios externos se encuentran principalmente en:
 
-`frontend/src/services/`
+```text
+frontend/src/services/
+```
 
-El repositorio identifica específicamente servicios para autenticación, actividades, grupos, mensajes y Groq.
+Entre ellos se encuentran servicios para autenticación, API, grupos, actividades, mensajes y Groq.
+
+El frontend utiliza **WebSocket mediante STOMP y SockJS** para las funcionalidades de comunicación en tiempo real.
+
+Nginx se encuentra integrado en el contenedor del frontend para servir la aplicación construida.
 
 ---
 
-## 4.2 Backend — API REST
+## 4.2 Backend — API y lógica de negocio
+
+**Tipo:** Contenedor de aplicación.
 
 **Responsabilidad:**
 
-Centralizar la lógica de negocio de NEVI y servir como intermediario entre el frontend, la base de datos y los mecanismos de comunicación en tiempo real.
+Centralizar la lógica de negocio de NOVI y proporcionar los servicios necesarios para que el frontend pueda realizar operaciones sobre la plataforma.
 
-El backend gestiona las operaciones relacionadas con usuarios, grupos, actividades y demás información académica de la plataforma.
+El backend gestiona principalmente:
 
-También se encarga de la autenticación mediante JWT y de la comunicación con PostgreSQL.
+* Usuarios.
+* Autenticación y autorización.
+* Grupos.
+* Integrantes de grupos.
+* Actividades.
+* Información académica.
+* Persistencia de datos.
+* Comunicación en tiempo real.
+
+También proporciona la API utilizada por el frontend y gestiona la comunicación WebSocket/STOMP utilizada para el chat.
 
 **Tecnología:**
 
@@ -80,38 +118,53 @@ Java 21 + Spring Boot 3.3 + Maven.
 
 Spring Security + JWT.
 
+**Persistencia:**
+
+Spring Data JPA / Hibernate.
+
+**Comunicación en tiempo real:**
+
+WebSocket + STOMP.
+
 **Implementación:**
 
 El backend se encuentra en:
 
-`backend/`
+```text
+backend/
+```
 
 La estructura principal se encuentra bajo:
 
-`backend/src/main/java/com/nevi/`
+```text
+backend/src/main/java/com/nevi/
+```
 
-El proyecto utiliza Spring Data JPA/Hibernate para gestionar la persistencia de los datos en PostgreSQL.
+Aunque el código utiliza actualmente el paquete `com.nevi`, la documentación arquitectónica utiliza el nombre del sistema **NOVI**.
 
 ---
 
 ## 4.3 PostgreSQL — Base de Datos
 
+**Tipo:** Contenedor de base de datos.
+
 **Responsabilidad:**
 
-Almacenar de forma persistente la información utilizada por NEVI.
+Almacenar de forma persistente la información utilizada por NOVI.
 
-A nivel conceptual, la base de datos maneja información relacionada con:
+A nivel conceptual, la base de datos almacena información relacionada con:
 
 * Usuarios.
 * Perfiles.
 * Roles.
 * Grupos.
-* Integrantes de los grupos.
+* Integrantes de grupos.
 * Mensajes.
 * Actividades.
 * Quizzes.
 * Rúbricas.
 * Retroalimentación.
+* Información relacionada con las funcionalidades académicas.
 
 **Tecnología:**
 
@@ -119,55 +172,33 @@ PostgreSQL 16.
 
 **Implementación:**
 
-La base de datos se ejecuta como un contenedor Docker denominado:
+PostgreSQL se ejecuta **localmente dentro de Docker** como un servicio denominado:
 
-`nevi-db`
+```text
+nevi-db
+```
 
-El servicio utiliza una imagen de PostgreSQL 16 y mantiene los datos mediante un volumen persistente denominado `nevi_db_data`.
+El servicio utiliza PostgreSQL 16 y cuenta con un volumen persistente:
 
-La gestión de las entidades y del esquema se realiza desde el backend mediante Spring Data JPA/Hibernate.
+```text
+nevi_db_data
+```
 
----
+Este volumen permite conservar los datos aunque el contenedor sea detenido o recreado.
 
-## 4.4 WebSocket — Comunicación en tiempo real
-
-**Responsabilidad:**
-
-Permitir la comunicación en tiempo real entre los usuarios de NEVI, principalmente para el chat grupal.
-
-El mecanismo permite que los mensajes puedan ser enviados y recibidos sin depender de una actualización manual de la página.
-
-**Tecnología:**
-
-WebSocket utilizando STOMP y SockJS.
-
-**Implementación:**
-
-El frontend utiliza:
-
-`@stomp/stompjs`
-
-y
-
-`SockJS`
-
-para establecer y gestionar la comunicación en tiempo real con el backend.
-
-La configuración de la URL del servicio WebSocket se realiza mediante la variable:
-
-`VITE_WS_URL`
-
-El README identifica WebSocket (STOMP) como el mecanismo utilizado para la comunicación en tiempo real de NEVI.
+La gestión de las entidades y la persistencia se realiza desde el backend mediante Spring Data JPA/Hibernate.
 
 ---
 
-## 4.5 Groq API
+## 4.4 Groq API — Sistema externo
+
+**Tipo:** Sistema externo.
 
 **Responsabilidad:**
 
-Proporcionar los servicios externos de inteligencia artificial utilizados por NEVI.
+Proporcionar los servicios de inteligencia artificial utilizados por NOVI.
 
-La integración permite ofrecer funcionalidades de apoyo tanto para profesores como para estudiantes.
+La integración permite ofrecer funcionalidades de apoyo académico para estudiantes y profesores.
 
 Entre las funcionalidades implementadas se encuentran:
 
@@ -177,107 +208,127 @@ Entre las funcionalidades implementadas se encuentran:
 * Generación de rúbricas.
 * Generación de retroalimentación.
 * Explicación simplificada de actividades.
-* Resumen del estado de un grupo.
-
-**Implementación verificable:**
-
-`frontend/src/services/groq.js`
-
-Entre las funciones documentadas se encuentran:
-
-`preguntarIA(pregunta)`
-
-`generarActividad(tema)`
-
-`generarQuiz(tema, cantidad)`
-
-`generarRubrica(titulo, descripcion)`
-
-`generarRetroalimentacion(titulo, respuesta)`
-
-`resumirActividad(titulo, descripcion)`
-
-`generarResumenGrupo(actividades)`
-
-La API utiliza la variable de entorno:
-
-`VITE_GROQ_API_KEY`
-
-para realizar las solicitudes al servicio externo.
-
----
-
-## 4.6 Nginx — Servidor Web
-
-**Responsabilidad:**
-
-Servir la aplicación frontend construida para producción.
-
-Nginx se utiliza dentro del contenedor del frontend para entregar los archivos generados por el proceso de construcción de React/Vite.
-
-**Tecnología:**
-
-Nginx.
+* Generación de resúmenes de grupos.
 
 **Implementación:**
 
-El README identifica Nginx como el servidor web utilizado en producción para servir el build del frontend.
+La integración se encuentra principalmente en:
+
+```text
+frontend/src/services/groq.js
+```
+
+Entre las funciones utilizadas se encuentran:
+
+```text
+preguntarIA()
+generarActividad()
+generarQuiz()
+generarRubrica()
+generarRetroalimentacion()
+resumirActividad()
+generarResumenGrupo()
+```
+
+La comunicación con el servicio utiliza la variable de entorno:
+
+```text
+VITE_GROQ_API_KEY
+```
+
+A diferencia de los servicios principales de NOVI, **Groq API no se ejecuta localmente**. Es un servicio externo utilizado por la aplicación para proporcionar las funcionalidades de inteligencia artificial.
 
 ---
 
-# 5. Relaciones entre contenedores
+# 5. Comunicación en tiempo real
 
-Las principales relaciones arquitectónicas identificadas son:
+La comunicación en tiempo real utilizada para el chat se implementa mediante **WebSocket con STOMP y SockJS**.
 
-| Origen              | Relación                                       | Destino             |
-| ------------------- | ---------------------------------------------- | ------------------- |
-| Estudiante          | Utiliza                                        | Aplicación Web      |
-| Profesor            | Utiliza y administra                           | Aplicación Web      |
-| Aplicación Web      | Realiza solicitudes de negocio                 | Backend Spring Boot |
-| Aplicación Web      | Establece comunicación en tiempo real          | Backend Spring Boot |
-| Backend Spring Boot | Autentica y autoriza usuarios mediante JWT     | Aplicación Web      |
-| Backend Spring Boot | Consulta y persiste información                | PostgreSQL          |
-| Backend Spring Boot | Gestiona comunicación mediante WebSocket/STOMP | Aplicación Web      |
-| Aplicación Web      | Solicita servicios de inteligencia artificial  | Groq API            |
-| Groq API            | Devuelve respuestas generadas                  | Aplicación Web      |
-| Nginx               | Sirve la aplicación frontend                   | Usuario / Navegador |
+Este mecanismo no constituye un contenedor independiente.
+
+La comunicación forma parte de la interacción entre:
+
+```text
+Aplicación Web
+       ↕
+Backend
+```
+
+El frontend utiliza:
+
+```text
+@stomp/stompjs
+sockjs-client
+```
+
+para establecer la comunicación en tiempo real.
+
+La URL del servicio WebSocket se configura mediante:
+
+```text
+VITE_WS_URL
+```
+
+El backend Spring Boot gestiona las conexiones y los mensajes mediante la configuración correspondiente de WebSocket/STOMP.
+
+Por esta razón, en el modelo C4 Nivel 2 WebSocket se representa como un **mecanismo de comunicación del backend y frontend**, y no como un quinto contenedor.
 
 ---
 
-# 6. Diagrama C4 Nivel 2
+# 6. Relaciones entre los contenedores
+
+Las principales relaciones arquitectónicas son:
+
+| Origen         | Relación                                                       | Destino        |
+| -------------- | -------------------------------------------------------------- | -------------- |
+| Estudiante     | Utiliza la aplicación web                                      | Aplicación Web |
+| Profesor       | Utiliza y administra la plataforma                             | Aplicación Web |
+| Aplicación Web | Realiza solicitudes mediante API REST                          | Backend        |
+| Aplicación Web | Establece comunicación en tiempo real mediante WebSocket/STOMP | Backend        |
+| Backend        | Consulta y persiste información                                | PostgreSQL     |
+| Aplicación Web | Solicita servicios de inteligencia artificial                  | Groq API       |
+| Groq API       | Devuelve respuestas generadas                                  | Aplicación Web |
+
+La comunicación entre los servicios principales se realiza dentro del entorno local de ejecución proporcionado por Docker Compose.
+
+---
+
+# 7. Diagrama C4 Nivel 2
 
 ```mermaid
 flowchart LR
 
     EST["ESTUDIANTE<br/><br/>Usuario de la plataforma"]
+
     PROF["PROFESOR<br/><br/>Usuario de la plataforma"]
 
-    subgraph NEVI["NEVI — Network Of Virtual Interaction"]
-        direction TB
+    WEB["Aplicación Web<br/><br/>
+    React 18 + Vite 5<br/>
+    Tailwind CSS<br/>
+    Nginx<br/><br/>
+    Interfaz de usuario"]
 
-        WEB["Aplicación Web<br/><br/>React 18 + Vite<br/>Gestión de grupos<br/>Actividades<br/>Chat<br/>Herramientas de IA"]
+    BACK["Backend<br/><br/>
+    Java 21 + Spring Boot 3.3<br/>
+    API REST<br/>
+    Spring Security + JWT<br/>
+    JPA / Hibernate<br/>
+    WebSocket + STOMP"]
 
-        NGINX["Nginx<br/><br/>Servidor web<br/>Entrega del frontend"]
+    DB["PostgreSQL 16<br/><br/>
+    Persistencia de datos"]
 
-        BACK["Backend<br/><br/>Java 21 + Spring Boot<br/>Lógica de negocio<br/>API REST<br/>Spring Security + JWT"]
+    GROQ["Groq API<br/><br/>
+    Sistema externo<br/>
+    Inteligencia Artificial"]
 
-        DB["PostgreSQL 16<br/><br/>Usuarios<br/>Perfiles y roles<br/>Grupos<br/>Mensajes<br/>Actividades<br/>Quizzes y rúbricas"]
+    EST -->|"Utiliza"| WEB
+    PROF -->|"Utiliza y administra"| WEB
 
-        WS["WebSocket<br/><br/>STOMP + SockJS<br/>Comunicación<br/>en tiempo real"]
+    WEB -->|"Solicitudes HTTP / API REST"| BACK
+    WEB -->|"WebSocket / STOMP"| BACK
 
-        NGINX -->|"Sirve la aplicación"| WEB
-
-        WEB -->|"Solicitudes HTTP / API"| BACK
-        WEB -->|"Comunicación en tiempo real"| WS
-        WS -->|"Gestiona mensajes"| BACK
-
-        BACK -->|"Consulta y persiste datos"| DB
-    end
-
-    GROQ["Groq API<br/><br/>Servicio externo<br/>de Inteligencia Artificial"]
-
-    EST -->|"Utiliza"| NGINX
-    PROF -->|"Utiliza y administra"| NGINX
+    BACK -->|"Consulta y persiste datos"| DB
 
     WEB -->|"Solicita servicios de IA"| GROQ
     GROQ -->|"Devuelve respuestas generadas"| WEB
@@ -285,44 +336,132 @@ flowchart LR
 
 ---
 
-# 7. Despliegue mediante Docker
+# 8. Ejecución local mediante Docker Compose
 
-La arquitectura actual puede ejecutarse mediante Docker Compose.
+Los principales servicios de NOVI se ejecutan localmente utilizando Docker Compose.
 
 El archivo:
 
-`docker-compose.yml`
+```text
+docker-compose.yml
+```
 
-define los principales servicios de la solución:
+define los servicios principales de la aplicación:
 
-* `nevi-db` → PostgreSQL 16.
-* `nevi-backend` → Backend Spring Boot.
-* `nevi-frontend` → Aplicación React servida mediante Nginx.
+| Servicio Docker | Función                               |
+| --------------- | ------------------------------------- |
+| `nevi-frontend` | Frontend React servido mediante Nginx |
+| `nevi-backend`  | Backend Java / Spring Boot            |
+| `nevi-db`       | Base de datos PostgreSQL 16           |
 
-El backend depende de que PostgreSQL se encuentre disponible antes de iniciar, y cada servicio se encuentra configurado dentro de Docker Compose.
+La arquitectura local puede representarse de la siguiente manera:
 
-Esta configuración permite ejecutar el stack de NEVI como una solución integrada mediante:
+```text
+                    NOVI — EJECUCIÓN LOCAL
+
+        ┌─────────────────────────────────────┐
+        │            Docker Compose           │
+        │                                     │
+        │  ┌───────────────┐                  │
+        │  │ nevi-frontend │                  │
+        │  │ React + Vite  │                  │
+        │  │     + Nginx   │                  │
+        │  └───────┬───────┘                  │
+        │          │ REST / WebSocket         │
+        │          ▼                          │
+        │  ┌───────────────┐                  │
+        │  │ nevi-backend  │                  │
+        │  │ Spring Boot   │                  │
+        │  │ JWT + JPA     │                  │
+        │  └───────┬───────┘                  │
+        │          │                          │
+        │          ▼                          │
+        │  ┌───────────────┐                  │
+        │  │    nevi-db    │                  │
+        │  │ PostgreSQL 16 │                  │
+        │  └───────────────┘                  │
+        │                                     │
+        └─────────────────────────────────────┘
+                         │
+                         │ Solicitudes de IA
+                         ▼
+                  ┌───────────────┐
+                  │   Groq API    │
+                  │    EXTERNO    │
+                  └───────────────┘
+```
+
+Docker Compose permite levantar los servicios principales de NOVI de forma integrada mediante:
 
 ```bash
 docker compose up --build
 ```
 
+De esta manera, el frontend, backend y PostgreSQL funcionan como servicios locales dentro de Docker.
+
+Groq API permanece fuera de este entorno, debido a que corresponde a un servicio externo.
+
 ---
 
-# 8. Resumen arquitectónico
+# 9. Diferencia entre contenedores C4 y contenedores Docker
 
-La arquitectura de contenedores de NEVI sigue una estructura basada en capas:
+Es importante diferenciar ambos conceptos.
 
-**Usuarios → Frontend → Backend → Base de Datos**
+Los **contenedores C4** representan las principales unidades tecnológicas que forman parte de la arquitectura de software.
 
-con dos integraciones complementarias:
+Los **contenedores Docker** representan unidades de ejecución utilizadas para empaquetar y ejecutar los servicios.
 
-**Frontend ↔ WebSocket ↔ Backend**
+En NOVI existe una correspondencia aproximada:
 
-y
+| Contenedor C4  | Servicio Docker |
+| -------------- | --------------- |
+| Aplicación Web | `nevi-frontend` |
+| Backend        | `nevi-backend`  |
+| PostgreSQL     | `nevi-db`       |
 
-**Frontend → Groq API → Frontend**
+Sin embargo:
 
-El frontend concentra la interacción con los usuarios, el backend centraliza la lógica de negocio y seguridad, PostgreSQL mantiene la información persistente, WebSocket permite la comunicación en tiempo real y Groq proporciona las funcionalidades de inteligencia artificial.
+* Docker Compose no es un contenedor C4.
+* WebSocket no es un contenedor C4 independiente.
+* Nginx no es un contenedor C4 independiente porque forma parte del servicio del frontend.
+* Groq API no forma parte de Docker Compose, ya que es un sistema externo.
 
-Esta vista representa la arquitectura tecnológica implementada actualmente en NEVI.
+---
+
+# 10. Resumen arquitectónico
+
+La arquitectura de contenedores de NOVI se organiza de la siguiente manera:
+
+```text
+Usuarios
+   │
+   ▼
+Aplicación Web
+React + Vite + Nginx
+   │
+   ├──────────────► Groq API
+   │                 (Externo)
+   │
+   │ REST / WebSocket
+   ▼
+Backend
+Spring Boot
+JWT + JPA + STOMP
+   │
+   ▼
+PostgreSQL
+```
+
+Los tres servicios principales de NOVI se ejecutan localmente mediante Docker Compose:
+
+```text
+nevi-frontend
+nevi-backend
+nevi-db
+```
+
+El frontend proporciona la interfaz de usuario, el backend centraliza la lógica de negocio, seguridad, API y comunicación en tiempo real, mientras que PostgreSQL proporciona la persistencia de los datos.
+
+La inteligencia artificial se integra mediante Groq API, que permanece como un sistema externo.
+
+Esta vista representa la arquitectura tecnológica actualmente implementada en NOVI y sirve como base para el **C4 Nivel 3 — Modelo de Componentes**.
