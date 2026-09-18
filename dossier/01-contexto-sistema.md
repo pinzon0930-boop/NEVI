@@ -2,9 +2,7 @@
 
 Estado: **sistema base reescrito desde cero y ejecutable localmente con Docker Compose**.
 
-Categoría confirmada por el profesor: **pendiente de transcribir** — el equipo
-debe anexar la captura o mensaje original donde el profesor confirma la
-categoría de NEVI (igual que exige el checklist del curso).
+Categoría confirmada por el profesor: **Mensajería y mesa de ayuda**.
 
 ## Sistema base 
 
