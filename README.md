@@ -124,7 +124,7 @@ Si prefieres correr los servicios sin Docker, adicionalmente necesitas:
 - Maven
 - PostgreSQL 16 instalado y corriendo localmente
 
-### Opción A: Con Docker (recomendada)
+### Opción Con Docker
 
 **1. Clonar el repositorio**
 ```bash
