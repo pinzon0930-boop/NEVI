@@ -15,9 +15,9 @@ La trazabilidad permite relacionar:
 * **C4 Nivel 1:** contexto general del sistema.
 * **C4 Nivel 2:** contenedores principales.
 * **C4 Nivel 3:** componentes internos de los contenedores.
-* **Implementación:** archivos y servicios existentes en el repositorio.
+* **Implementación:** archivos, servicios y tecnologías presentes en el repositorio.
 
-El objetivo es comprobar que los elementos representados en los diagramas arquitectónicos corresponden con la implementación real del proyecto.
+El objetivo es comprobar que los elementos representados en los diagramas arquitectónicos mantienen correspondencia con la implementación real del proyecto.
 
 ---
 
@@ -34,12 +34,18 @@ flowchart TD
     A -->|"descompone"| B
     B -->|"descompone"| C
     C -->|"se implementa mediante"| D
+```
 
-    D --> E["Frontend React + Vite"]
-    D --> F["Backend Spring Boot"]
-    D --> G["PostgreSQL"]
-    D --> H["WebSocket / STOMP"]
-    D --> I["Groq API"]
+La relación general sigue el principio:
+
+```text
+Contexto
+   ↓
+Contenedores
+   ↓
+Componentes
+   ↓
+Implementación
 ```
 
 ---
@@ -53,30 +59,25 @@ flowchart LR
     subgraph L1["C4 Nivel 1 — Contexto"]
         EST["Estudiante"]
         PROF["Profesor"]
-        NOVI["NEVI<br/>Network Of Virtual Interaction"]
-        GROQ["Groq API"]
+        NOVI["NOVI<br/>Network Of Virtual Interaction"]
+        GROQ["Groq API<br/>Sistema externo"]
     end
 
-    EST -->|"Utiliza"| NEVI
-    PROF -->|"Administra y utiliza"| NEVI
-    NEVI -->|"Solicita servicios de IA"| GROQ
+    EST -->|"Utiliza"| NOVI
+    PROF -->|"Administra y utiliza"| NOVI
+    NOVI -->|"Solicita servicios de IA"| GROQ
 
     %% NIVEL 2
     subgraph L2["C4 Nivel 2 — Contenedores"]
-        WEB["Aplicación Web<br/>React + Vite"]
-        API["Backend<br/>Spring Boot"]
+        WEB["Aplicación Web<br/>React + Vite + Nginx"]
+        API["Backend<br/>Java + Spring Boot"]
         DB["PostgreSQL"]
-        WS["WebSocket<br/>STOMP / SockJS"]
-        AI["Integración IA<br/>Groq API"]
-        NGINX["Nginx"]
     end
 
     NOVI --> WEB
     WEB --> API
     API --> DB
-    WEB --> WS
-    WEB --> AI
-    NGINX --> WEB
+    WEB -->|"Solicitudes de IA"| GROQ
 
     %% NIVEL 3
     subgraph L3["C4 Nivel 3 — Componentes del Frontend"]
@@ -84,8 +85,8 @@ flowchart LR
         APIC["Cliente API<br/>api.js"]
         GROUP["Gestión de grupos<br/>grupos.js"]
         ACT["Gestión de actividades<br/>actividades.js"]
-        MSG["Mensajería<br/>mensajes.js"]
-        IA["Servicios IA<br/>groq.js"]
+        MSG["Gestión de mensajes<br/>mensajes.js"]
+        IA["Integración IA<br/>groq.js"]
     end
 
     WEB --> AUTH
@@ -95,12 +96,16 @@ flowchart LR
     WEB --> MSG
     WEB --> IA
 
+    MSG -->|"WebSocket / STOMP"| API
+    APIC -->|"HTTP / REST"| API
+    IA -->|"API"| GROQ
+
     %% IMPLEMENTACIÓN
     subgraph CODE["Implementación en el repositorio"]
-        FE["frontend/src/"]
-        BE["backend/src/main/java/com/nevi/"]
+        FE["frontend/"]
+        BE["backend/"]
+        DC["docker-compose.yml"]
         ENV[".env / .env.example"]
-        DOCKER["docker-compose.yml"]
     end
 
     AUTH --> FE
@@ -111,28 +116,36 @@ flowchart LR
     IA --> FE
 
     API --> BE
-    DB --> DOCKER
-    WEB --> DOCKER
-    API --> DOCKER
+    WEB --> DC
+    API --> DC
+    DB --> DC
+
+    IA --> ENV
 ```
+
+En este modelo:
+
+* **WebSocket/STOMP** es un mecanismo de comunicación utilizado por el frontend y el backend.
+* **Nginx** forma parte del contenedor de la aplicación web y sirve el build de React.
+* **Docker Compose** define y ejecuta los servicios de la aplicación localmente.
+* **Groq API** permanece como sistema externo.
 
 ---
 
 # 4. Trazabilidad Nivel 1 → Nivel 2
 
-El Nivel 1 representa el sistema desde una perspectiva externa, mientras que el Nivel 2 muestra cómo NEVI se divide internamente en contenedores.
+El Nivel 1 representa NOVI desde una perspectiva externa, mientras que el Nivel 2 muestra los principales contenedores que conforman el sistema.
 
-| C4 Nivel 1 | C4 Nivel 2     | Relación                                                     |
-| ---------- | -------------- | ------------------------------------------------------------ |
-| Estudiante | Aplicación Web | El estudiante utiliza la interfaz web                        |
-| Profesor   | Aplicación Web | El profesor administra las funcionalidades desde la interfaz |
-| NOVI       | Aplicación Web | Interfaz principal del sistema                               |
-| NOVI       | Backend        | Procesamiento de solicitudes y lógica de negocio             |
-| NOVI       | PostgreSQL     | Persistencia de información                                  |
-| NOVI       | WebSocket      | Comunicación en tiempo real                                  |
-| NOVI       | Groq API       | Funcionalidades de inteligencia artificial                   |
+| C4 Nivel 1 | C4 Nivel 2     | Relación                                                        |
+| ---------- | -------------- | --------------------------------------------------------------- |
+| Estudiante | Aplicación Web | El estudiante utiliza la interfaz de NOVI                       |
+| Profesor   | Aplicación Web | El profesor administra las funcionalidades mediante la interfaz |
+| NOVI       | Aplicación Web | Contiene la interfaz de usuario del sistema                     |
+| NOVI       | Backend        | Procesa las solicitudes y contiene la lógica de negocio         |
+| NOVI       | PostgreSQL     | Almacena la información persistente del sistema                 |
+| NOVI       | Groq API       | Utiliza servicios externos de inteligencia artificial           |
 
-La estructura actual del repositorio confirma la separación entre `frontend`, `backend` y `docker-compose.yml`, además de la integración con PostgreSQL, WebSocket y Groq.
+La implementación actual del repositorio separa `frontend`, `backend` y `docker-compose.yml`. El README también identifica React + Vite para el frontend, Spring Boot para el backend, PostgreSQL, WebSocket/STOMP, Groq API, Docker Compose y Nginx.
 
 ---
 
@@ -142,52 +155,64 @@ La estructura actual del repositorio confirma la separación entre `frontend`, `
 
 El contenedor **Aplicación Web** corresponde al frontend desarrollado con React y Vite.
 
+Nginx se utiliza para servir el build del frontend cuando la aplicación se ejecuta mediante Docker.
+
 ### Componentes asociados
 
-| C4 Nivel 2     | C4 Nivel 3             | Archivo                                |
+| C4 Nivel 2     | C4 Nivel 3             | Implementación                         |
 | -------------- | ---------------------- | -------------------------------------- |
 | Aplicación Web | Autenticación          | `frontend/src/services/auth.js`        |
 | Aplicación Web | Cliente API            | `frontend/src/services/api.js`         |
 | Aplicación Web | Gestión de grupos      | `frontend/src/services/grupos.js`      |
 | Aplicación Web | Gestión de actividades | `frontend/src/services/actividades.js` |
-| Aplicación Web | Mensajería             | `frontend/src/services/mensajes.js`    |
+| Aplicación Web | Gestión de mensajes    | `frontend/src/services/mensajes.js`    |
 | Aplicación Web | Integración IA         | `frontend/src/services/groq.js`        |
 
-Estos archivos aparecen actualmente dentro de `frontend/src/services/` del repositorio.
+Estos servicios aparecen dentro de `frontend/src/services/` en el repositorio.
 
 ---
 
-# 6. Trazabilidad de funcionalidades
-
-## 6.1 Autenticación
+# 6. Trazabilidad de autenticación
 
 ```mermaid
 flowchart LR
+
     U["Estudiante / Profesor"]
-    UI["Frontend"]
+    FE["Aplicación Web"]
     AUTH["auth.js"]
     API["Backend Spring Boot"]
-    JWT["JWT"]
+    JWT["JWT / Spring Security"]
     DB["PostgreSQL"]
 
-    U --> UI
-    UI --> AUTH
+    U --> FE
+    FE --> AUTH
     AUTH --> API
     API --> JWT
     API --> DB
 ```
 
+### Trazabilidad
+
+```text
+C4 Nivel 1
+Estudiante / Profesor
+        ↓
+C4 Nivel 2
+Aplicación Web
+        ↓
+C4 Nivel 3
+Autenticación
+        ↓
+Implementación
+frontend/src/services/auth.js
+        ↓
+Backend
+Spring Security + JWT
+        ↓
+PostgreSQL
+```
+
 ### Implementación
-
-**C4 Nivel 2:**
-
-`Aplicación Web → Backend`
-
-**C4 Nivel 3:**
-
-`Componente de Autenticación → Cliente API → Backend`
-
-**Código:**
 
 ```text
 frontend/
@@ -196,23 +221,24 @@ frontend/
         └── auth.js
 ```
 
-La autenticación utiliza **Spring Security + JWT**, de acuerdo con el stack documentado actualmente en el repositorio.
+El repositorio documenta el uso de **Spring Security + JWT** para la autenticación del sistema.
 
 ---
 
-# 7. Gestión de grupos
+# 7. Trazabilidad de gestión de grupos
 
 ```mermaid
 flowchart LR
+
     U["Estudiante / Profesor"]
-    UI["Aplicación Web"]
+    FE["Aplicación Web"]
     G["grupos.js"]
     API["Backend"]
     DB["PostgreSQL"]
 
-    U --> UI
-    UI --> G
-    G --> API
+    U --> FE
+    FE --> G
+    G -->|"HTTP / REST"| API
     API --> DB
 ```
 
@@ -220,38 +246,40 @@ flowchart LR
 
 ```text
 Nivel 1
-└── Estudiante / Profesor
-        │
-        ▼
+Estudiante / Profesor
+        ↓
 Nivel 2
-└── Aplicación Web
-        │
-        ▼
+Aplicación Web
+        ↓
 Nivel 3
-└── Gestión de grupos
-        │
-        ▼
+Gestión de grupos
+        ↓
 Implementación
-└── frontend/src/services/grupos.js
+frontend/src/services/grupos.js
+        ↓
+Backend
+        ↓
+PostgreSQL
 ```
 
-Las funcionalidades documentadas incluyen creación de grupos y acceso mediante código de invitación.
+Entre las funcionalidades documentadas se encuentra la creación y administración de grupos, así como el acceso mediante códigos de invitación.
 
 ---
 
-# 8. Gestión de actividades
+# 8. Trazabilidad de gestión de actividades
 
 ```mermaid
 flowchart LR
+
     U["Profesor / Estudiante"]
-    UI["Aplicación Web"]
+    FE["Aplicación Web"]
     ACT["actividades.js"]
     API["Backend"]
     DB["PostgreSQL"]
 
-    U --> UI
-    UI --> ACT
-    ACT --> API
+    U --> FE
+    FE --> ACT
+    ACT -->|"HTTP / REST"| API
     API --> DB
 ```
 
@@ -264,57 +292,57 @@ flowchart LR
 | Nivel 3        | Gestión de actividades                 |
 | Implementación | `frontend/src/services/actividades.js` |
 
-Entre las funciones documentadas del sistema se encuentran la creación y consulta de actividades, además de la entrega de actividades por parte de estudiantes.
+Las funcionalidades documentadas incluyen la creación y consulta de actividades y la interacción de los estudiantes con las actividades disponibles.
 
 ---
 
-# 9. Comunicación en tiempo real
+# 9. Trazabilidad de comunicación en tiempo real
+
+WebSocket no se representa como un contenedor independiente. Es un mecanismo de comunicación entre la aplicación web y el backend.
 
 ```mermaid
 flowchart LR
+
     U["Estudiante / Profesor"]
     FE["Aplicación Web"]
     MSG["mensajes.js"]
-    WS["WebSocket<br/>STOMP + SockJS"]
-    BE["Spring Boot"]
-    DB["PostgreSQL"]
+    BE["Backend Spring Boot"]
 
     U <--> FE
     FE <--> MSG
-    MSG <--> WS
-    WS <--> BE
-    BE <--> DB
+    MSG <-->|"WebSocket<br/>STOMP + SockJS"| BE
 ```
 
 ### Trazabilidad
 
 ```text
 Nivel 1
-└── Estudiante / Profesor
-        │
-        ▼
+Estudiante / Profesor
+        ↓
 Nivel 2
-└── Aplicación Web
-        │
-        └── WebSocket
-                │
-                ▼
+Aplicación Web
+        ↓
 Nivel 3
-└── Gestión de mensajes
-        │
-        ▼
+Gestión de mensajes
+        ↓
 Implementación
-└── frontend/src/services/mensajes.js
+frontend/src/services/mensajes.js
+        ↓
+Comunicación
+WebSocket / STOMP + SockJS
+        ↓
+Backend Spring Boot
 ```
 
-El repositorio documenta el uso de **WebSocket con STOMP y SockJS** para la comunicación en tiempo real.
+El repositorio identifica WebSocket mediante STOMP y SockJS para la comunicación en tiempo real.
 
 ---
 
-# 10. Integración con inteligencia artificial
+# 10. Trazabilidad de integración con inteligencia artificial
 
 ```mermaid
 flowchart LR
+
     U["Estudiante / Profesor"]
     FE["Aplicación Web"]
     IA["groq.js"]
@@ -333,11 +361,11 @@ flowchart LR
 | Nivel          | Elemento                        |
 | -------------- | ------------------------------- |
 | Nivel 1        | Groq API                        |
-| Nivel 2        | Integración IA                  |
-| Nivel 3        | Servicios de IA                 |
+| Nivel 2        | Aplicación Web → Groq API       |
+| Nivel 3        | Integración IA                  |
 | Implementación | `frontend/src/services/groq.js` |
 
-El archivo `groq.js` concentra las funciones utilizadas para las diferentes herramientas de IA. El repositorio documenta funciones para tutor académico, generación de actividades, quizzes, rúbricas, retroalimentación y explicaciones simplificadas.
+El repositorio identifica `groq.js` como el servicio principal utilizado para la integración con Groq.
 
 ### Funciones principales
 
@@ -351,9 +379,11 @@ resumirActividad()
 generarResumenGrupo()
 ```
 
+Estas funciones aparecen documentadas en el README del repositorio.
+
 ---
 
-# 11. Trazabilidad de las herramientas de IA
+# 11. Trazabilidad de herramientas de IA
 
 ```mermaid
 flowchart TD
@@ -368,7 +398,7 @@ flowchart TD
     G --> F["resumirActividad()"]
     G --> H["generarResumenGrupo()"]
 
-    A --> A1["Tutor NEVI"]
+    A --> A1["Tutor académico"]
     B --> B1["Crear actividad"]
     C --> C1["Generador de quiz"]
     D --> D1["Rúbrica automática"]
@@ -377,13 +407,13 @@ flowchart TD
     H --> H1["Resumen del grupo"]
 ```
 
-El repositorio identifica estas funcionalidades de IA y las relaciona con componentes concretos del frontend.
+Estas funciones corresponden a las herramientas de IA descritas en el repositorio.
 
 ---
 
 # 12. Trazabilidad de componentes visuales
 
-Además de los servicios, las funcionalidades de IA están conectadas con componentes React específicos.
+Además de los servicios, las funcionalidades de IA están relacionadas con componentes React específicos.
 
 | Funcionalidad            | Componente                   |
 | ------------------------ | ---------------------------- |
@@ -395,60 +425,114 @@ Además de los servicios, las funcionalidades de IA están conectadas con compon
 | Explicación simplificada | `ModalExplicacion.jsx`       |
 | Resumen del grupo        | `GrupoDetalle.jsx`           |
 
-Estos componentes forman parte de `frontend/src/components/` y `frontend/src/pages/` del repositorio.
+El repositorio contiene estos componentes dentro de `frontend/src/components/` y `frontend/src/pages/`.
 
 ---
 
-# 13. Trazabilidad de infraestructura
+# 13. Trazabilidad de infraestructura y Docker
+
+Docker Compose representa la forma en que se despliega localmente la arquitectura principal de NOVI.
 
 ```mermaid
 flowchart TD
 
     DC["docker-compose.yml"]
 
-    DC --> DB["nevi-db<br/>PostgreSQL"]
-    DC --> BE["nevi-backend<br/>Spring Boot"]
     DC --> FE["nevi-frontend<br/>React + Nginx"]
+    DC --> BE["nevi-backend<br/>Spring Boot"]
+    DC --> DB["nevi-db<br/>PostgreSQL"]
 
+    FE -->|"HTTP / REST"| BE
+    FE -->|"WebSocket / STOMP"| BE
     BE --> DB
-    FE --> BE
 ```
 
 ### Implementación
 
-| Elemento C4            | Implementación       |
-| ---------------------- | -------------------- |
-| Frontend               | `frontend/`          |
-| Backend                | `backend/`           |
-| Base de datos          | PostgreSQL           |
-| Frontend en producción | Nginx                |
-| Orquestación           | `docker-compose.yml` |
+| Elemento arquitectónico     | Implementación                  |
+| --------------------------- | ------------------------------- |
+| Aplicación Web              | `frontend/`                     |
+| Backend                     | `backend/`                      |
+| Base de datos               | PostgreSQL                      |
+| Servidor web                | Nginx dentro de `nevi-frontend` |
+| Orquestación local          | `docker-compose.yml`            |
+| Comunicación en tiempo real | WebSocket / STOMP + SockJS      |
+| IA externa                  | Groq API                        |
 
-El README del repositorio indica que Docker Compose levanta los tres contenedores principales: `nevi-db`, `nevi-backend` y `nevi-frontend`.
+El README indica que `docker compose up --build` levanta tres contenedores principales:
+
+```text
+nevi-db
+nevi-backend
+nevi-frontend
+```
+
+El frontend es servido mediante Nginx dentro de `nevi-frontend`.
+
+**Importante:** Docker Compose es una herramienta de despliegue y no un contenedor C4 adicional.
 
 ---
 
-# 14. Matriz general de trazabilidad
+# 14. Trazabilidad del entorno local
+
+La arquitectura principal de NOVI puede ejecutarse localmente mediante Docker Compose.
+
+```text
+                    ENTORNO LOCAL
+                         │
+                  Docker Compose
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+        ▼                ▼                ▼
+   nevi-frontend    nevi-backend      nevi-db
+   React + Nginx    Spring Boot      PostgreSQL
+        │                │                │
+        └───────┐        │        ┌───────┘
+                │        │        │
+                └────────┴────────┘
+
+                         │
+                         │ Internet
+                         ▼
+
+                    Groq API
+                 Sistema externo
+```
+
+Por lo tanto:
+
+* Frontend → local.
+* Backend → local.
+* PostgreSQL → local.
+* Nginx → local, dentro del frontend.
+* WebSocket/STOMP → ejecutado entre frontend y backend locales.
+* Docker Compose → ejecutado localmente.
+* Groq API → sistema externo.
+
+La documentación del repositorio confirma que el stack principal puede levantarse mediante Docker Compose y que Groq requiere una clave de API externa.
+
+---
+
+# 15. Matriz general de trazabilidad
 
 | ID    | Nivel C4 | Elemento                 | Implementación               | Estado |
 | ----- | -------- | ------------------------ | ---------------------------- | ------ |
-| C1-01 | Nivel 1  | Estudiante               | Usuario de NEVI              | ✅      |
-| C1-02 | Nivel 1  | Profesor                 | Usuario de NEVI              | ✅      |
+| C1-01 | Nivel 1  | Estudiante               | Usuario de NOVI              | ✅      |
+| C1-02 | Nivel 1  | Profesor                 | Usuario de NOVI              | ✅      |
 | C1-03 | Nivel 1  | NOVI                     | Sistema completo             | ✅      |
-| C1-04 | Nivel 1  | Groq API                 | Servicio externo de IA       | ✅      |
-| C2-01 | Nivel 2  | Aplicación Web           | `frontend/`                  | ✅      |
+| C1-04 | Nivel 1  | Groq API                 | Sistema externo de IA        | ✅      |
+| C2-01 | Nivel 2  | Aplicación Web           | `frontend/` + Nginx          | ✅      |
 | C2-02 | Nivel 2  | Backend                  | `backend/`                   | ✅      |
-| C2-03 | Nivel 2  | PostgreSQL               | Contenedor `nevi-db`         | ✅      |
-| C2-04 | Nivel 2  | WebSocket                | STOMP + SockJS               | ✅      |
-| C2-05 | Nivel 2  | Groq API                 | Integración IA               | ✅      |
-| C2-06 | Nivel 2  | Nginx                    | Servidor del frontend        | ✅      |
+| C2-03 | Nivel 2  | PostgreSQL               | `nevi-db`                    | ✅      |
+| C2-04 | Nivel 2  | Groq API                 | API externa                  | ✅      |
 | C3-01 | Nivel 3  | Autenticación            | `auth.js`                    | ✅      |
 | C3-02 | Nivel 3  | Cliente API              | `api.js`                     | ✅      |
 | C3-03 | Nivel 3  | Gestión de grupos        | `grupos.js`                  | ✅      |
 | C3-04 | Nivel 3  | Gestión de actividades   | `actividades.js`             | ✅      |
-| C3-05 | Nivel 3  | Mensajería               | `mensajes.js`                | ✅      |
+| C3-05 | Nivel 3  | Gestión de mensajes      | `mensajes.js`                | ✅      |
 | C3-06 | Nivel 3  | Integración IA           | `groq.js`                    | ✅      |
-| C3-07 | Nivel 3  | Tutor NEVI               | `AsistenteIA.jsx`            | ✅      |
+| C3-07 | Nivel 3  | Tutor académico          | `AsistenteIA.jsx`            | ✅      |
 | C3-08 | Nivel 3  | Generador de actividades | `CrearActividad.jsx`         | ✅      |
 | C3-09 | Nivel 3  | Generador de quizzes     | `ModalQuiz.jsx`              | ✅      |
 | C3-10 | Nivel 3  | Generador de rúbricas    | `ModalRubrica.jsx`           | ✅      |
@@ -458,7 +542,7 @@ El README del repositorio indica que Docker Compose levanta los tres contenedore
 
 ---
 
-# 15. Relación entre documentación y código
+# 16. Relación entre documentación y código
 
 La documentación C4 queda organizada de la siguiente manera:
 
@@ -482,49 +566,54 @@ NEVI/
 │   └── src/
 │       └── main/
 │           ├── java/
-│           │   └── com/nevi/
+│           │   └── com/
+│           │       └── nevi/
 │           └── resources/
 │
 ├── docker-compose.yml
+├── .env.example
 └── README.md
 ```
 
-La estructura real del repositorio contiene actualmente `backend`, `frontend`, `dossier` y `docker-compose.yml`, por lo que la trazabilidad puede mantenerse dentro de la carpeta `dossier`.
+La estructura del repositorio contiene actualmente `backend`, `frontend`, `dossier`, `docker-compose.yml` y `.env.example`.
 
 ---
 
-# 16. Flujo completo de una solicitud
+# 17. Flujo completo de una solicitud de IA
 
-Un ejemplo de trazabilidad completa sería el uso del **Tutor NEVI**:
+Un ejemplo de trazabilidad completa es el uso del tutor académico.
 
 ```mermaid
 sequenceDiagram
 
     actor Estudiante
-    participant FE as Frontend
+    participant FE as Aplicación Web
+    participant COMP as AsistenteIA.jsx
     participant IA as groq.js
     participant G as Groq API
 
     Estudiante->>FE: Escribe una pregunta
-    FE->>IA: preguntarIA(pregunta)
+    FE->>COMP: Procesa la interacción
+    COMP->>IA: preguntarIA(pregunta)
     IA->>G: Solicitud de IA
     G-->>IA: Respuesta generada
-    IA-->>FE: Respuesta
+    IA-->>COMP: Respuesta
+    COMP-->>FE: Actualiza interfaz
     FE-->>Estudiante: Muestra respuesta
 ```
 
-La trazabilidad sería:
+### Trazabilidad
 
 ```text
 C4 Nivel 1
 Estudiante
     ↓
-NEVI
+NOVI
 
 C4 Nivel 2
 Aplicación Web
     ↓
-Integración IA
+Integración con Groq API
 
 C4 Nivel 3
 AsistenteIA.jsx
@@ -540,9 +629,9 @@ Groq API
 
 ---
 
-# 17. Criterio de trazabilidad
+# 18. Criterio de trazabilidad
 
-Se considera que un elemento está trazado cuando puede establecerse la siguiente relación:
+Se considera que un elemento está correctamente trazado cuando puede establecerse una relación entre:
 
 ```text
 Elemento del contexto
@@ -570,13 +659,29 @@ groq.js
 Groq API
 ```
 
-De esta forma, los diagramas C4 no representan elementos aislados, sino que mantienen una relación con la implementación del sistema.
+Otro ejemplo:
+
+```text
+Estudiante
+   ↓
+Aplicación Web
+   ↓
+Gestión de mensajes
+   ↓
+mensajes.js
+   ↓
+WebSocket / STOMP
+   ↓
+Backend Spring Boot
+```
+
+De esta forma, los diagramas C4 mantienen una relación directa con la implementación del sistema.
 
 ---
 
-# 18. Conclusión
+# 19. Conclusión
 
-La arquitectura documentada de NOVI mantiene una relación entre los tres niveles C4:
+La arquitectura documentada de NOVI mantiene una relación entre los tres niveles del modelo C4 y la implementación del repositorio.
 
 ```text
 ┌──────────────────────────────┐
@@ -594,12 +699,11 @@ La arquitectura documentada de NOVI mantiene una relación entre los tres nivele
 │ C4 NIVEL 2                   │
 │ Contenedores                 │
 │                              │
-│ Frontend                     │
+│ Aplicación Web               │
 │ Backend                      │
 │ PostgreSQL                   │
-│ WebSocket                    │
-│ Groq API                     │
-│ Nginx                        │
+│                              │
+│ Groq API = externo           │
 └──────────────┬───────────────┘
                ↓
 ┌──────────────────────────────┐
@@ -626,4 +730,20 @@ La arquitectura documentada de NOVI mantiene una relación entre los tres nivele
 └──────────────────────────────┘
 ```
 
-La trazabilidad permite demostrar que la arquitectura propuesta para NEVI corresponde con la estructura y las tecnologías presentes en el repositorio, manteniendo una relación clara entre **contexto, contenedores, componentes y código**.
+La trazabilidad permite demostrar que la arquitectura propuesta para NOVI mantiene correspondencia con la estructura y las tecnologías presentes en el repositorio.
+
+La separación queda definida de la siguiente manera:
+
+```text
+C4
+│
+├── Nivel 1 → ¿Quién utiliza el sistema?
+│
+├── Nivel 2 → ¿Qué contenedores forman el sistema?
+│
+├── Nivel 3 → ¿Qué componentes implementan esos contenedores?
+│
+└── Trazabilidad → ¿Dónde está implementado cada elemento?
+```
+
+El despliegue local mediante Docker Compose se mantiene como parte de la infraestructura de ejecución, mientras que **Groq API permanece como servicio externo**.
