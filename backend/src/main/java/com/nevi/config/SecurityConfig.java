@@ -38,7 +38,7 @@ public class SecurityConfig {
 
             // Define qué rutas son públicas y cuáles requieren autenticación.
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()   // Login y registro: sin token.
+                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()   // Solo login y registro son públicos.
                 .requestMatchers("/ws/**").permitAll()         // WebSocket: sin token (el token se pasa en el mensaje).
                 .anyRequest().authenticated()                  // Todo lo demás requiere JWT.
             )
