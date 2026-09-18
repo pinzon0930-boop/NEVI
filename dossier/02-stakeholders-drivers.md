@@ -40,7 +40,7 @@
 
 ## Drivers arquitectónicos
 
-### DRIVER-01 · Seguridad 🔴 Crítica
+### DRIVER-01 · Seguridad - Crítica
 
 **Necesidad:** Las conversaciones entre estudiantes y profesores contienen
 información académica privada. El token JWT no debe ser accesible a
@@ -66,7 +66,7 @@ leer `localStorage` y robar el token JWT.
 
 ---
 
-### DRIVER-02 · Modificabilidad 🔴 Crítica
+### DRIVER-02 · Modificabilidad - Crítica
 
 **Necesidad:** Cambios en la API no deben obligar a redesplegar el
 frontend manualmente ni romper el chat WebSocket.
@@ -83,7 +83,7 @@ contratos HTTP/JSON estables.
 
 ---
 
-### DRIVER-03 · Disponibilidad 🟡 Moderada
+### DRIVER-03 · Disponibilidad - Moderada
 
 **Necesidad:** El sistema debe responder sin interrupciones durante clases
 y sesiones de chat activas.
@@ -101,7 +101,7 @@ pueden agotar el pool y generar errores 500 en cascada.
 
 ---
 
-### DRIVER-04 · Rendimiento 🟡 Moderado
+### DRIVER-04 · Rendimiento - Moderado
 
 **Necesidad:** Los mensajes de chat deben entregarse en tiempo real sin
 latencias perceptibles para los participantes.
@@ -111,7 +111,7 @@ polling HTTP. La latencia depende de la conexión del cliente.
 
 ---
 
-### DRIVER-05 · Testeabilidad 🔴 Crítica
+### DRIVER-05 · Testeabilidad - Crítica
 
 **Necesidad:** El Checkpoint Hito 5 exige que el sistema levante en 2
 comandos y que las pruebas automatizadas pasen sin intervención manual.
