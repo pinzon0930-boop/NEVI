@@ -41,7 +41,7 @@ public class SecurityConfig {
             // OJO: antes esto era "/api/auth/**" permitAll, lo que dejaba /api/auth/perfil
             // (que SÍ requiere token) público por accidente. Solo register/login son públicos.
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()   // Solo login y registro son públicos.
                 .requestMatchers("/ws/**").permitAll()         // WebSocket: sin token (el token se pasa en el mensaje).
                 .anyRequest().authenticated()                  // Todo lo demás requiere JWT.
             )
