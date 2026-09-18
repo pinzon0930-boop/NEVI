@@ -2,6 +2,7 @@ package com.nevi.controller;
 
 import com.nevi.dto.GrupoRequest;
 import com.nevi.dto.GrupoResponse;
+import com.nevi.repository.GrupoRepository; // VIOLACION DELIBERADA: Controller no debe depender de Repository (ver LayeringArchitectureTest)
 import com.nevi.service.GrupoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class GrupoController {
 
     private final GrupoService grupoService;
+    private final GrupoRepository grupoRepository; // VIOLACION DELIBERADA (fitness function debe fallar aqui)
 
     // GET /api/grupos — Devuelve los grupos del usuario autenticado.
     @GetMapping
@@ -51,5 +53,13 @@ public class GrupoController {
     @GetMapping("/{id}")
     public ResponseEntity<GrupoResponse> obtenerPorId(@PathVariable String id) {
         return ResponseEntity.ok(grupoService.obtenerPorId(id));
+    }
+
+    // Endpoint temporal SOLO para demostrar la violacion deliberada de capas.
+    // Un Controller nunca deberia llamar directo a un Repository, saltandose el Service.
+    // Se elimina en el commit de reversion, una vez confirmado el fallo en CI.
+    @GetMapping("/debug-count")
+    public ResponseEntity<Long> debugCount() {
+        return ResponseEntity.ok(grupoRepository.count());
     }
 }
