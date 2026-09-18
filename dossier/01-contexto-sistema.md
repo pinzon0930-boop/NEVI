@@ -59,12 +59,10 @@ docker compose up --build -d
 curl http://localhost:8080/actuator/health
 ```
 
-**Pendiente detectado (bloqueante para el checkpoint):** el healthcheck del
+**Hallazgo resuelto:** se detectó en la semana 1/2 que el healthcheck del
 backend en `docker-compose.yml` apunta a `/actuator/health`, pero
-`spring-boot-starter-actuator` **no está** en `backend/pom.xml`. El endpoint
-no existe todavía, así que el healthcheck fallará hasta agregar la
-dependencia. Se deja registrado aquí como hallazgo de la semana 1/2, a
-corregir antes de dar por cumplida la "base ejecutable".
+`spring-boot-starter-actuator` no estaba en `backend/pom.xml`. Ya se agregó
+la dependencia (ver `backend/pom.xml`) y el endpoint responde correctamente.
 
 Verificación (a implementar — todavía no existe carpeta de tests):
 

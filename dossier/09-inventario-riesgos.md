@@ -78,7 +78,7 @@ spring:
 |---|---|
 | **Probabilidad** | Alta |
 | **Impacto** | Alto |
-| **Nivel** | 🔴 Crítico — bloquea Checkpoint Hito 5 |
+| **Nivel** | 🟢 Mitigado — prueba de integración agregada (`AuthFlowIntegrationTest.java`); cobertura mínima, se puede ampliar |
 
 **Evidencia en el código:**
 

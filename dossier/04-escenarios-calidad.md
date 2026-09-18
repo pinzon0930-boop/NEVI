@@ -85,7 +85,7 @@ driver arquitectónico (`DRIVER-XX`).
 | **Entorno** | Pipeline de CI (GitHub Actions) ejecutando `./mvnw test` |
 | **Respuesta** | El pipeline reporta fallo en la prueba de integración antes de que el PR se fusione |
 | **Medida de respuesta** | El CI detecta el fallo en < 5 min; el PR no puede fusionarse con CI rojo |
-| **Estado actual** | 🔴 No implementado — no existen pruebas de integración (R-04) |
+| **Estado actual** | ✅ Implementado — ver `backend/src/test/java/com/nevi/AuthFlowIntegrationTest.java`; el CI ejecuta el flujo registro→login→acceso protegido |
 
 ---
 
@@ -97,4 +97,4 @@ driver arquitectónico (`DRIVER-XX`).
 | ESC-02 | QA-02 Rendimiento | DRIVER-04 | Con k6 (pendiente) |
 | ESC-03 | QA-03 Seguridad | DRIVER-01 | ✅ Verificado manualmente |
 | ESC-04 | QA-04 Modificabilidad | DRIVER-02 | ✅ Por diseño |
-| ESC-05 | QA-05 Testeabilidad | DRIVER-05 | ❌ Requiere implementar tests |
+| ESC-05 | QA-05 Testeabilidad | DRIVER-05 | ✅ Implementado (AuthFlowIntegrationTest) |
