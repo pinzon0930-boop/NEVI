@@ -1,8 +1,8 @@
 // URL base de la API de Groq — endpoint principal para todas las peticiones de IA
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions'
 
-// Modelo de lenguaje utilizado — openai/gpt-oss-20b disponible gratuitamente en Groq
-const MODELO = 'openai/gpt-oss-20b'
+// Modelo de lenguaje utilizado — llama3-8b-8192 disponible gratuitamente en Groq
+const MODELO = 'llama3-8b-8192'
 
 // Clave de API leída desde las variables de entorno de Vite (archivo .env)
 // IMPORTANTE: nunca escribir la clave directamente aquí — solo en el .env
