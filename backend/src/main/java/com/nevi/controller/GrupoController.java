@@ -25,7 +25,20 @@ public class GrupoController {
     public ResponseEntity<List<GrupoResponse>> misGrupos(
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return ResponseEntity.ok(grupoService.misGrupos(userDetails.getUsername()));
+        long inicioTotal = System.nanoTime();
+        
+        // Etapa de lógica de negocio y consulta a base de datos
+        long inicioService = System.nanoTime();
+        List<GrupoResponse> response = grupoService.misGrupos(userDetails.getUsername());
+        long finService = System.nanoTime();
+        
+        long finTotal = System.nanoTime();
+        
+        // Registro de métricas para evidencias experimentales
+        System.out.println("[METRICA] /api/grupos - Service Time: " + (finService - inicioService) / 1_000_000.0 + " ms");
+        System.out.println("[METRICA] /api/grupos - Total Controller Time: " + (finTotal - inicioTotal) / 1_000_000.0 + " ms");
+
+        return ResponseEntity.ok(response);
     }
 
     // POST /api/grupos — Crea un nuevo grupo (solo profesores).
