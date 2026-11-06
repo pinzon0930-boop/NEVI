@@ -11,6 +11,8 @@ import com.nevi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.nevi.event.GrupoCreadoEvent;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 
