@@ -1,10 +1,10 @@
-# 1. Mapeo de subdominios y Bounded Contexts de NOVI
+# Mapeo de subdominios y Bounded Contexts de NOVI
 
-## 1.1 Objetivo
+## Objetivo
 
 Identificar las principales áreas funcionales de NOVI, establecer sus respectivos Bounded Contexts y definir las responsabilidades de cada uno dentro del sistema.
 
-## 1.2 Mapeo de subdominios
+##  Mapeo de subdominios
 
 | Subdominio | Bounded Context | Responsabilidad |
 |---|---|---|
@@ -16,7 +16,7 @@ Identificar las principales áreas funcionales de NOVI, establecer sus respectiv
 | Asistencia académica | Tutoría con IA | Resolver dudas y proporcionar explicaciones sobre temas académicos. |
 | Análisis académico | Análisis de grupos | Generar resúmenes y recomendaciones relacionadas con la actividad académica de los grupos. |
 
-## 1.3 Responsabilidades de cada Bounded Context
+## Responsabilidades de cada Bounded Context
 
 **Identidad y acceso:** se encarga del registro, inicio de sesión y administración de los roles de profesores y estudiantes.
 
@@ -32,7 +32,7 @@ Identificar las principales áreas funcionales de NOVI, establecer sus respectiv
 
 **Análisis de grupos:** permite obtener resúmenes y recomendaciones relacionadas con el desarrollo de las actividades académicas.
 
-## 1.4 Relaciones entre los contextos
+## Relaciones entre los contextos
 
 Los diferentes contextos se relacionan para permitir el funcionamiento de NOVI:
 
@@ -43,12 +43,12 @@ Los diferentes contextos se relacionan para permitir el funcionamiento de NOVI:
 - Evaluación académica utiliza las actividades como base para generar herramientas de evaluación.
 - Tutoría con IA y Análisis de grupos proporcionan asistencia y recomendaciones relacionadas con el contenido académico.
 
-## 1.5 Consideraciones arquitectónicas
+## Consideraciones arquitectónicas
 
 Los Bounded Contexts representan una separación lógica de las responsabilidades del sistema. Esto no significa que cada uno deba funcionar como un microservicio independiente.
 
 NOVI mantiene una arquitectura basada en Java y Spring Boot en su backend, por lo que estos contextos permiten identificar las diferentes responsabilidades del sistema y establecer posibles límites para su integración.
 
-## 1.6 Conclusión
+## Conclusión
 
 El mapeo de subdominios y Bounded Contexts permite identificar las principales áreas funcionales de NOVI, comprender sus responsabilidades y reconocer cómo se relacionan entre sí. Esta división servirá como base para definir los contratos de API y los eventos de integración que se trabajarán en las siguientes actividades.
