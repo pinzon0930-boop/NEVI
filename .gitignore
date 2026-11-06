@@ -27,3 +27,4 @@ Thumbs.db
 backend/target/
 *.class
 *.jar
+Claude outputs/
