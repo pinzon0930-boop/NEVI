@@ -5,14 +5,14 @@ import com.nevi.dto.GrupoResponse;
 import com.nevi.entity.GroupMember;
 import com.nevi.entity.Grupo;
 import com.nevi.entity.User;
+import com.nevi.event.GrupoCreadoEvent;
 import com.nevi.repository.GroupMemberRepository;
 import com.nevi.repository.GrupoRepository;
 import com.nevi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.nevi.event.GrupoCreadoEvent;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class GrupoService {
     private final GrupoRepository grupoRepository;
     private final GroupMemberRepository memberRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher; // SPIKE-01
 
     // Crea un nuevo grupo. Solo los profesores llegan a este método (se valida en el controlador).
     @Transactional
@@ -36,7 +37,17 @@ public class GrupoService {
             .accessCode(generarCodigo())
             .build();
 
-        return GrupoResponse.desde(grupoRepository.save(grupo));
+        Grupo guardado = grupoRepository.save(grupo);
+
+        // SPIKE-01: se publica el evento GrupoCreado
+        eventPublisher.publishEvent(new GrupoCreadoEvent(
+            guardado.getId(),
+            guardado.getName(),
+            profesor.getId(),
+            guardado.getCreatedAt()
+        ));
+
+        return GrupoResponse.desde(guardado);
     }
 
     // Devuelve los grupos del usuario según su rol.
