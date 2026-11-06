@@ -1,10 +1,10 @@
-# 2. Diseño del contrato de API y catálogo de eventos de NOVI
+#  Diseño del contrato de API y catálogo de eventos de NOVI
 
-## 2.1 Objetivo
+## Objetivo
 
 Definir los principales mecanismos de comunicación entre los Bounded Contexts identificados en NOVI, estableciendo los eventos que pueden generarse cuando ocurre una acción importante dentro de la plataforma.
 
-## 2.2 Catálogo de eventos
+## Catálogo de eventos
 
 Se propone el siguiente catálogo de eventos para representar las acciones relevantes del sistema:
 
@@ -21,7 +21,7 @@ Se propone el siguiente catálogo de eventos para representar las acciones relev
 | RetroalimentacionGenerada | Evaluación académica | Se genera cuando se produce retroalimentación para un estudiante. |
 | ConsultaTutorIA | Tutoría con IA | Se genera cuando un usuario realiza una consulta al tutor académico. |
 
-## 2.3 Estructura propuesta de los eventos
+## Estructura propuesta de los eventos
 
 Para mantener una estructura organizada, se propone que los eventos compartan algunos campos básicos:
 
@@ -65,7 +65,7 @@ Este ejemplo representa la estructura propuesta para comunicar que se creó un g
 | RetroalimentacionGenerada | Evaluación académica | Análisis académico |
 | ConsultaTutorIA | Tutoría con IA | Análisis académico |
 
-## 2.5 Consideraciones de integración
+## Consideraciones de integración
 
 El catálogo de eventos representa una propuesta para facilitar la comunicación entre los diferentes contextos de NOVI.
 
@@ -73,6 +73,6 @@ Los eventos permiten informar que ocurrió una acción sin que el contexto que l
 
 Sin embargo, estos eventos no se consideran implementados actualmente. Su funcionamiento y utilidad deberán comprobarse mediante una prueba técnica (Spike 1).
 
-## 2.6 Conclusión
+## Conclusión
 
 El diseño del catálogo de eventos establece una base para organizar la comunicación entre las diferentes áreas de NOVI. También permite identificar qué información podría compartirse y qué contextos podrían necesitarla, preparando el terreno para evaluar una estrategia de integración mediante eventos.
